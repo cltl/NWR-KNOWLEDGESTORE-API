@@ -96,7 +96,7 @@ public class TrigUtil {
         return false;
     }
 
-    static public boolean isEventTripe (Statement statement) {
+    static public boolean isEventTriple (Statement statement) {
         String subject = statement.getSubject().toString();
         int idx = subject.lastIndexOf("/");
         if (idx>-1) {
