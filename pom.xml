@@ -92,7 +92,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifestEntries>
-                            <Module-Interface>vu.cltl.storyteller</Module-Interface>
+                            <Module-Interface>vu.cltl.nwr-knowledgestore-api</Module-Interface>
                         </manifestEntries>
                     </archive>
                 </configuration>
