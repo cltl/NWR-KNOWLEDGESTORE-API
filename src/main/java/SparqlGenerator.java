@@ -124,6 +124,7 @@ public class SparqlGenerator {
      * @param uris
      * @return
      */
+
     static public String makeAttributionQueryOrg(ArrayList<String> uris) {
         String sparqlQuery = "PREFIX sem: <http://semanticweb.cs.vu.nl/2009/11/sem/> \n" +
                 "PREFIX owltime: <http://www.w3.org/TR/owl-time#> \n" +
