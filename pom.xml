@@ -10,9 +10,9 @@
     <description>Toolkit to query the NewsReader KnowledgeStore with SPARQL and create a JSON story</description>
     <url>http://www.newsreader-project.eu</url>
     <scm>
-        <connection>scm:git:git@github.com/cltl/NWR-KNOWLEDGESTORE-API</connection>
-        <developerConnection>scm:git:git@github.com/cltl/NWR-KNOWLEDGESTORE-API</developerConnection>
-        <url>https://github.com/cltl/NWR-KNOWLEDGESTORE-API</url>
+        <connection>scm:git:git@github.com/cltl/nwr-knowledgestore-api</connection>
+        <developerConnection>scm:git:git@github.com/cltl/nwr-knowledgestore-api</developerConnection>
+        <url>https://github.com/cltl/nwr-knowledgestore-api</url>
     </scm>
 
     <licenses>
