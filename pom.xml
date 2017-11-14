@@ -3,16 +3,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>com.github.cltl</groupId>
-    <artifactId>nwr-knowledgestore-api</artifactId>
+    <artifactId>nwr-triple-api</artifactId>
     <version>1.0</version>
-    <description>Toolkit to query the NewsReader KnowledgeStore with SPARQL and create a JSON story</description>
+    <description>Toolkit to query the NewsReader KnowledgeStore with SPARQL or read TRiG files and create a JSON</description>
     <url>http://www.newsreader-project.eu</url>
     <scm>
-        <connection>scm:git:git@github.com/cltl/nwr-knowledgestore-api</connection>
-        <developerConnection>scm:git:git@github.com/cltl/nwr-knowledgestore-api</developerConnection>
-        <url>https://github.com/cltl/nwr-knowledgestore-api</url>
+        <connection>scm:git:git@github.com/cltl/nwr-triple-api</connection>
+        <developerConnection>scm:git:git@github.com/cltl/nwr-triple-api</developerConnection>
+        <url>https://github.com/cltl/nwr-triple-api</url>
     </scm>
 
     <licenses>
@@ -92,7 +91,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifestEntries>
-                            <Module-Interface>vu.cltl.nwr-knowledgestore-api</Module-Interface>
+                            <Module-Interface>vu.cltl.triple</Module-Interface>
                         </manifestEntries>
                     </archive>
                 </configuration>
