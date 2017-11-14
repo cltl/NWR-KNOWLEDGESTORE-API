@@ -281,6 +281,54 @@ public class TrigUtil {
      * prints KG
      * @param statementMap
      */
+    public static void printCountedKnowledgeGraph(OutputStream fos,
+                                           HashMap<String, ArrayList<Statement>> statementMap
+
+    ) throws IOException {
+        HashMap<String, Integer> statementCounts = new HashMap<String, Integer>();
+        Set keySet = statementMap.keySet();
+        Iterator<String> keys = keySet.iterator();
+        while (keys.hasNext()) {
+            String tripleKey = keys.next();
+            String str = tripleKey+"\n";
+            /// we first print the primary triples
+            ArrayList<Statement> statements = statementMap.get(tripleKey);
+            SortedSet<Statement> treeSet = new TreeSet<Statement>(new CompareStatement());
+            for (int i = 0; i < statements.size(); i++) {
+                Statement statement = statements.get(i);
+                treeSet.add(statement);
+                if (statementCounts.containsKey(statement.toString())) {
+                    Integer count = statementCounts.get(statement.toString());
+                    count++;
+                    statementCounts.put(statement.toString(), count);
+                }
+                else {
+                    statementCounts.put(statement.toString(), 1);
+                }
+            }
+            for (Statement statement : treeSet) {
+                //str += "\t"+statement.getString()+"\n";
+                str +=  "\t" + getPrettyNSValue(statement.getPredicate().toString());
+                if (!isGafTriple(statement)) {
+                    Integer count = 0;
+                    if (statementCounts.containsKey(statement.toString())) {
+                        count = statementCounts.get(statement.toString());
+                    }
+                    str+=  "\t"+count.toString()+"\t" + getPrettyNSValue(statement.getObject().toString()) + "\n";
+                }
+                else {
+                    str+=  "\t" + getPrettyNSValueFile(statement.getObject().toString()) + "\n";
+                }
+            }
+            str +="\n";
+            fos.write(str.getBytes());
+        }
+    }
+
+    /** KS util
+     * prints KG
+     * @param statementMap
+     */
     public static void printKnowledgeGraph(OutputStream fos,
                                            ArrayList<String> eventKeys,
                                            HashMap<String, ArrayList<Statement>> statementMap,
