@@ -1,3 +1,5 @@
+package vu.cltl.triple;
+
 import eu.kyotoproject.kaf.KafSaxParser;
 import eu.kyotoproject.kaf.KafWordForm;
 import org.json.JSONArray;

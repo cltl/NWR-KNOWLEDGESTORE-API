@@ -1,3 +1,5 @@
+package vu.cltl.triple;
+
 import com.hp.hpl.jena.rdf.model.Statement;
 
 import java.io.IOException;

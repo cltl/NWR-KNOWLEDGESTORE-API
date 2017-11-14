@@ -1,3 +1,5 @@
+package vu.cltl.triple;
+
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QuerySolution;
@@ -23,7 +25,7 @@ public class GetTriplesFromKnowledgeStore {
     public static String pass = "ks=2014!";
 
     HttpAuthenticator authenticator = new SimpleAuthenticator(user, pass.toCharArray());
-   // public static TrigTripleData trigTripleData = new TrigTripleData();
+   // public static vu.cltl.triple.TrigTripleData trigTripleData = new vu.cltl.triple.TrigTripleData();
 
     static public void setServicePoint (String service, String ks) {
         if (ks.isEmpty()) {

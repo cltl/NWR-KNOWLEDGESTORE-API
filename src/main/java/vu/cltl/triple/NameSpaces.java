@@ -1,3 +1,5 @@
+package vu.cltl.triple;
+
 /**
  * Created by piek on 05/01/2017.
  */

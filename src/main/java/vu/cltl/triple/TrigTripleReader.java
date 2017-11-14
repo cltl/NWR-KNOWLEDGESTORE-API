@@ -1,3 +1,5 @@
+package vu.cltl.triple;
+
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Statement;

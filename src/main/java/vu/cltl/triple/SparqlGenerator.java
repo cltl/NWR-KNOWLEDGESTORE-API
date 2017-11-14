@@ -1,3 +1,4 @@
+package vu.cltl.triple;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -1476,10 +1477,10 @@ order by DESC(?count)
 
     static public void main (String [] args) {
         System.out.println(SparqlGenerator.makeSparqlQueryForLightEntityProjectFromKs("<http://www.newsreader-project.eu/project/London>", "5"));
-        //System.out.println(SparqlGenerator.makeSparqlQueryForCitedSourcesFromKs());
-        //System.out.println(SparqlGenerator.makeSparqlQueryForAuthorsFromKs());
-        //System.out.println( SparqlGenerator.makeSparqlQueryForLightEntityProjectFromKs("<http://www.newsreader-project.eu/project/London>"));
-       // System.out.println(SparqlGenerator.s6);
+        //System.out.println(vu.cltl.triple.SparqlGenerator.makeSparqlQueryForCitedSourcesFromKs());
+        //System.out.println(vu.cltl.triple.SparqlGenerator.makeSparqlQueryForAuthorsFromKs());
+        //System.out.println( vu.cltl.triple.SparqlGenerator.makeSparqlQueryForLightEntityProjectFromKs("<http://www.newsreader-project.eu/project/London>"));
+       // System.out.println(vu.cltl.triple.SparqlGenerator.s6);
     }
 
 }
