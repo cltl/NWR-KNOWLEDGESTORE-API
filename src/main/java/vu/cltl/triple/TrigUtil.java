@@ -325,6 +325,51 @@ public class TrigUtil {
         }
     }
 
+
+    /** KS util
+     * prints KG
+     * @param statementMap
+     */
+    public static void printCountedKnowledgeGraphCsv(OutputStream fos,
+                                                  HashMap<String, ArrayList<Statement>> statementMap
+
+    ) throws IOException {
+        HashMap<String, Integer> statementCounts = new HashMap<String, Integer>();
+        Set keySet = statementMap.keySet();
+        Iterator<String> keys = keySet.iterator();
+        String str = "event,relation,object,freq\n";
+        fos.write(str.getBytes());
+        while (keys.hasNext()) {
+            String tripleKey = keys.next();
+
+            /// we first print the primary triples
+            ArrayList<Statement> statements = statementMap.get(tripleKey);
+            SortedSet<Statement> treeSet = new TreeSet<Statement>(new CompareStatement());
+            for (int i = 0; i < statements.size(); i++) {
+                Statement statement = statements.get(i);
+                treeSet.add(statement);
+                if (statementCounts.containsKey(statement.toString())) {
+                    Integer count = statementCounts.get(statement.toString());
+                    count++;
+                    statementCounts.put(statement.toString(), count);
+                }
+                else {
+                    statementCounts.put(statement.toString(), 1);
+                }
+            }
+            for (Statement statement : treeSet) {
+                if (!isGafTriple(statement)) {
+                    Integer count = 0;
+                    if (statementCounts.containsKey(statement.toString())) {
+                        count = statementCounts.get(statement.toString());
+                    }
+                    str= getValueFile(statement.getSubject().toString())+","+ getPrettyNSValue(statement.getPredicate().toString())+","+getPrettyNSValue(statement.getObject().toString()) +"," + count.toString()+ "\n";
+                    fos.write(str.getBytes());
+                }
+            }
+        }
+    }
+
     /** KS util
      * prints KG
      * @param statementMap
