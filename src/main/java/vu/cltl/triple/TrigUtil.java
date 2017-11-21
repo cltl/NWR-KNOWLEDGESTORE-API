@@ -4,11 +4,17 @@ import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.tdb.TDBFactory;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RDFFormat;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
+
+import static vu.cltl.triple.TrigTripleReader.readTripleFromTrigFiles;
 
 /**
  * Created by piek on 23/06/15.
@@ -338,10 +344,11 @@ public class TrigUtil {
         Set keySet = statementMap.keySet();
         Iterator<String> keys = keySet.iterator();
         String str = "event,relation,object,freq\n";
+        int eventCounter = 0;
         fos.write(str.getBytes());
         while (keys.hasNext()) {
             String tripleKey = keys.next();
-
+            eventCounter++;
             /// we first print the primary triples
             ArrayList<Statement> statements = statementMap.get(tripleKey);
             SortedSet<Statement> treeSet = new TreeSet<Statement>(new CompareStatement());
@@ -363,7 +370,8 @@ public class TrigUtil {
                     if (statementCounts.containsKey(statement.toString())) {
                         count = statementCounts.get(statement.toString());
                     }
-                    str= getValueFile(statement.getSubject().toString())+","+ getPrettyNSValue(statement.getPredicate().toString())+","+getPrettyNSValue(statement.getObject().toString()) +"," + count.toString()+ "\n";
+                   // str= getValueFile(statement.getSubject().toString())+","+ getPrettyNSValue(statement.getPredicate().toString())+","+getPrettyNSValue(statement.getObject().toString()).replaceAll(",","COMMA") +"," + count.toString()+ "\n";
+                    str= eventCounter+","+ getPrettyNSValue(statement.getPredicate().toString())+","+getPrettyNSValue(statement.getObject().toString()).replaceAll(",","COMMA") +"," + count.toString()+ "\n";
                     fos.write(str.getBytes());
                 }
             }
@@ -650,6 +658,15 @@ public class TrigUtil {
         }
     }
 
+    static public boolean isLabelTriple(Statement s) {
+        if (s.getPredicate().getLocalName().equals("label")) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     static public String getPrettyNSValue (String element) {
         String object = "";
         String value = getValue(element);
@@ -845,5 +862,99 @@ public class TrigUtil {
             }
         }
     }
+
+
+    static public ArrayList<File> makeRecursiveFileList(File inputFile, String filter) {
+        ArrayList<File> acceptedFileList = new ArrayList<File>();
+        File[] theFileList = null;
+        if ((inputFile.canRead())) {
+            theFileList = inputFile.listFiles();
+            for (int i = 0; i < theFileList.length; i++) {
+                File newFile = theFileList[i];
+                if (newFile.isDirectory()) {
+                    ArrayList<File> nextFileList = makeRecursiveFileList(newFile, filter);
+                    acceptedFileList.addAll(nextFileList);
+                } else if (newFile.getName().endsWith(filter)){
+                    acceptedFileList.add(newFile);
+                }
+            }
+        } else {
+            System.out.println("Cannot access file:" + inputFile + "#");
+            if (!inputFile.exists()) {
+                System.out.println("File/folder does not exist!");
+            }
+        }
+        return acceptedFileList;
+    }
+
+    public static void main (String[] args) {
+        String pathToTrigFiles = "/Users/piek/Desktop/CLTL-onderwijs/EnvironmentalAndDigitalHumanities/london/example/trig-local";
+        for (int i = 0; i < args.length; i++) {
+            String arg = args[i];
+            if (arg.equals("--trig-files") && args.length>(i+1)) {
+                pathToTrigFiles = args[i+1];
+            }
+        }
+
+        /// process all trig files and build the knowledge graphs
+        ArrayList<File> trigFiles = makeRecursiveFileList(new File(pathToTrigFiles), ".trig");
+        //ArrayList<File> trigFiles = new ArrayList<File>();
+        //File trigFile = new File ("/Users/piek/Desktop/CLTL-onderwijs/EnvironmentalAndDigitalHumanities/london/trig/t18390513-1537.trig");
+        //trigFiles.add(trigFile);
+
+        vu.cltl.triple.TrigTripleData trigTripleData = readTripleFromTrigFiles(trigFiles);
+        ArrayList<String> domainEvents = EventTypes.getEventSubjectUris(trigTripleData.tripleMapInstances);
+        HashMap<String, ArrayList<Statement>> eckgMap = TrigUtil.getPrimaryKnowledgeGraphHashMap(domainEvents,trigTripleData);
+        HashMap<String, ArrayList<Statement>> seckgMap = TrigUtil.getSecondaryKnowledgeGraphHashMap(domainEvents,trigTripleData);
+        System.out.println("eckgMap after merge = " + eckgMap.size());
+        try {
+            OutputStream fos1 = new FileOutputStream(pathToTrigFiles+"/"+"trig.csv");
+            OutputStream fos2 = new FileOutputStream(pathToTrigFiles+"/"+"trig.eckg");
+        //    TrigUtil.printCountedKnowledgeGraph(fos2, eckgMap);
+            TrigUtil.printCountedKnowledgeGraphCsv(fos1, eckgMap);
+            Dataset dataset = TDBFactory.createDataset();
+            createModels(dataset);
+            Set keySet = eckgMap.keySet();
+            Iterator<String> keys = keySet.iterator();
+            while (keys.hasNext()) {
+                String tripleKey = keys.next();
+                ArrayList<Statement> statements = eckgMap.get(tripleKey);
+                instanceModel.add(statements);
+            }
+            RDFDataMgr.write(fos2, instanceModel, RDFFormat.TRIG_PRETTY);
+
+            fos1.close();
+            fos2.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+    static public void createModels (Dataset ds) {
+        ds = TDBFactory.createDataset();
+        graspModel = ds.getNamedModel(ResourcesUri.nwr + "grasp");
+        provenanceModel = ds.getNamedModel(ResourcesUri.nwr + "provenance");
+        instanceModel = ds.getNamedModel(ResourcesUri.nwr+"instances");
+        prefixModels(ds);
+    }
+
+
+    static void prefixModels (Dataset ds) {
+        Model defaultModel = ds.getDefaultModel();
+        ResourcesUri.prefixModel(defaultModel);
+        ResourcesUri.prefixModelNwr(defaultModel);
+        ResourcesUri.prefixModelGaf(defaultModel);
+
+        ResourcesUri.prefixModelGaf(provenanceModel);
+
+        ResourcesUri.prefixModel(instanceModel);
+        ResourcesUri.prefixModelNwr(instanceModel);
+        ResourcesUri.prefixModelGaf(instanceModel);
+
+    }
+    static Model graspModel = null;
+    static Model provenanceModel = null;
+    static Model instanceModel = null;
+
 
 }
