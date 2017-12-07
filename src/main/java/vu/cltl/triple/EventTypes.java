@@ -69,6 +69,22 @@ public class EventTypes {
         return eventUris;
     }
 
+    public static ArrayList<String> getAllEventSubjectUris(HashMap<String, ArrayList<Statement>> tripleMap) {
+        Set keySet = tripleMap.keySet();
+        ArrayList<String> eventUris = new ArrayList<String>();
+        Iterator<String> keys = keySet.iterator();
+        while (keys.hasNext()) {
+            String tripleKey = keys.next();
+            ArrayList<Statement> statements = tripleMap.get(tripleKey);
+            for (int i = 0; i < statements.size(); i++) {
+                Statement statement = statements.get(i);
+                    eventUris.add(tripleKey);
+                    break;
+            }
+        }
+        return eventUris;
+    }
+
     /**
      * KS util
      * @param statement

@@ -890,6 +890,7 @@ public class TrigUtil {
     public static void main (String[] args) {
         String pathToTrigFolder = "";
         String pathToTrigFile = "";
+        pathToTrigFile = "/Users/piek/Desktop/test/s1a2a_none_none.trig";
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
             if (arg.equals("--trig-folder") && args.length>(i+1)) {
@@ -906,7 +907,8 @@ public class TrigUtil {
         else trigFiles.add(new File(pathToTrigFile));
 
         vu.cltl.triple.TrigTripleData trigTripleData = readTripleFromTrigFiles(trigFiles);
-        ArrayList<String> domainEvents = EventTypes.getEventSubjectUris(trigTripleData.tripleMapInstances);
+       // ArrayList<String> domainEvents = EventTypes.getEventSubjectUris(trigTripleData.tripleMapInstances);
+        ArrayList<String> domainEvents = EventTypes.getAllEventSubjectUris(trigTripleData.tripleMapInstances);
         HashMap<String, ArrayList<Statement>> eckgMap = TrigUtil.getPrimaryKnowledgeGraphHashMap(domainEvents,trigTripleData);
         HashMap<String, ArrayList<Statement>> seckgMap = TrigUtil.getSecondaryKnowledgeGraphHashMap(domainEvents,trigTripleData);
         System.out.println("eckgMap after merge = " + eckgMap.size());
