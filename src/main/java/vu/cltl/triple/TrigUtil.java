@@ -888,19 +888,22 @@ public class TrigUtil {
     }
 
     public static void main (String[] args) {
-        String pathToTrigFiles = "/Users/piek/Desktop/CLTL-onderwijs/EnvironmentalAndDigitalHumanities/london/example/trig-local";
+        String pathToTrigFolder = "";
+        String pathToTrigFile = "";
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
-            if (arg.equals("--trig-files") && args.length>(i+1)) {
-                pathToTrigFiles = args[i+1];
+            if (arg.equals("--trig-folder") && args.length>(i+1)) {
+                pathToTrigFolder = args[i+1];
+            }
+            else if (arg.equals("--trig-file") && args.length>(i+1)) {
+                pathToTrigFile = args[i+1];
             }
         }
 
         /// process all trig files and build the knowledge graphs
-        ArrayList<File> trigFiles = makeRecursiveFileList(new File(pathToTrigFiles), ".trig");
-        //ArrayList<File> trigFiles = new ArrayList<File>();
-        //File trigFile = new File ("/Users/piek/Desktop/CLTL-onderwijs/EnvironmentalAndDigitalHumanities/london/trig/t18390513-1537.trig");
-        //trigFiles.add(trigFile);
+        ArrayList<File> trigFiles = new ArrayList<File>();
+        if (!pathToTrigFolder.isEmpty()) trigFiles = makeRecursiveFileList(new File(pathToTrigFolder), ".trig");
+        else trigFiles.add(new File(pathToTrigFile));
 
         vu.cltl.triple.TrigTripleData trigTripleData = readTripleFromTrigFiles(trigFiles);
         ArrayList<String> domainEvents = EventTypes.getEventSubjectUris(trigTripleData.tripleMapInstances);
@@ -908,23 +911,32 @@ public class TrigUtil {
         HashMap<String, ArrayList<Statement>> seckgMap = TrigUtil.getSecondaryKnowledgeGraphHashMap(domainEvents,trigTripleData);
         System.out.println("eckgMap after merge = " + eckgMap.size());
         try {
-            OutputStream fos1 = new FileOutputStream(pathToTrigFiles+"/"+"trig.csv");
-            OutputStream fos2 = new FileOutputStream(pathToTrigFiles+"/"+"trig.eckg");
-        //    TrigUtil.printCountedKnowledgeGraph(fos2, eckgMap);
-            TrigUtil.printCountedKnowledgeGraphCsv(fos1, eckgMap);
-            Dataset dataset = TDBFactory.createDataset();
-            createModels(dataset);
-            Set keySet = eckgMap.keySet();
-            Iterator<String> keys = keySet.iterator();
-            while (keys.hasNext()) {
-                String tripleKey = keys.next();
-                ArrayList<Statement> statements = eckgMap.get(tripleKey);
-                instanceModel.add(statements);
+            String path = "";
+            if (!pathToTrigFile.isEmpty()) {
+                path = pathToTrigFile;
             }
-            RDFDataMgr.write(fos2, instanceModel, RDFFormat.TRIG_PRETTY);
+            else if (!pathToTrigFolder.isEmpty()) {
+                path = pathToTrigFolder+"/trig";
+            }
+            if (!path.isEmpty()) {
+                OutputStream fos1 = new FileOutputStream(path + ".csv");
+                OutputStream fos2 = new FileOutputStream(path +  ".eckg");
+                TrigUtil.printCountedKnowledgeGraph(fos2, eckgMap);
+                TrigUtil.printCountedKnowledgeGraphCsv(fos1, eckgMap);
+                Dataset dataset = TDBFactory.createDataset();
+                createModels(dataset);
+                Set keySet = eckgMap.keySet();
+                Iterator<String> keys = keySet.iterator();
+                while (keys.hasNext()) {
+                    String tripleKey = keys.next();
+                    ArrayList<Statement> statements = eckgMap.get(tripleKey);
+                    instanceModel.add(statements);
+                }
+                RDFDataMgr.write(fos2, instanceModel, RDFFormat.TRIG_PRETTY);
 
-            fos1.close();
-            fos2.close();
+                fos1.close();
+                fos2.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
