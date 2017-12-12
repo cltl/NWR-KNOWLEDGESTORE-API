@@ -955,6 +955,13 @@ public class TrigUtil {
     }
 
 
+    static public void prefixDefaultModels (Dataset ds) {
+        Model defaultModel = ds.getDefaultModel();
+        ResourcesUri.prefixModel(defaultModel);
+        ResourcesUri.prefixModelNwr(defaultModel);
+        ResourcesUri.prefixModelGaf(defaultModel);
+    }
+
     static void prefixModels (Dataset ds) {
         Model defaultModel = ds.getDefaultModel();
         ResourcesUri.prefixModel(defaultModel);
@@ -968,6 +975,7 @@ public class TrigUtil {
         ResourcesUri.prefixModelGaf(instanceModel);
 
     }
+
     static Model graspModel = null;
     static Model provenanceModel = null;
     static Model instanceModel = null;
@@ -978,9 +986,8 @@ public class TrigUtil {
         while (keys.hasNext()) {
            String tripleKey = keys.next();
            ArrayList<Statement> statements = map.get(tripleKey);
-           instanceModel.add(statements);
+            dataset.getDefaultModel().add(statements);
         }
-        ///RDFDataMgr.write(fos2, instanceModel, RDFFormat.TRIG_PRETTY);
     }
 
     static public Dataset tripleDataToJenaData (TrigTripleData trigTripleData) {
