@@ -144,12 +144,14 @@ public class TrigUtil {
         }
         return eckgMap;
     }
+
     /**
      * KS util
      * @param trigTripleData
      * @return
      */
-    public static HashMap<String, ArrayList<Statement>> getSecondaryKnowledgeGraphHashMap (ArrayList<String> subjectUriArrayList, TrigTripleData trigTripleData) {
+    public static HashMap<String, ArrayList<Statement>> getSecondaryKnowledgeGraphHashMap (ArrayList<String> subjectUriArrayList,
+                                                                                           TrigTripleData trigTripleData) {
         HashMap<String, ArrayList<Statement>>  eckgMap = new HashMap<String, ArrayList<Statement>>();
         for (int k = 0; k < subjectUriArrayList.size(); k++) {
             String tripleKey =  subjectUriArrayList.get(k);
@@ -970,5 +972,25 @@ public class TrigUtil {
     static Model provenanceModel = null;
     static Model instanceModel = null;
 
+    static void addStatementsToJenaData (Dataset dataset, HashMap<String, ArrayList<Statement>> map) {
+        Set keySet = map.keySet();
+        Iterator<String> keys = keySet.iterator();
+        while (keys.hasNext()) {
+           String tripleKey = keys.next();
+           ArrayList<Statement> statements = map.get(tripleKey);
+           instanceModel.add(statements);
+        }
+        ///RDFDataMgr.write(fos2, instanceModel, RDFFormat.TRIG_PRETTY);
+    }
+
+    static Dataset tripleDataToJenaData (TrigTripleData trigTripleData) {
+        Dataset dataset = TDBFactory.createDataset();
+        createModels(dataset);
+        addStatementsToJenaData(dataset, trigTripleData.tripleMapInstances);
+        addStatementsToJenaData(dataset, trigTripleData.tripleMapOthers);
+        addStatementsToJenaData(dataset, trigTripleData.tripleMapGrasp);
+        addStatementsToJenaData(dataset, trigTripleData.tripleMapProvenance);
+        return dataset;
+    }
 
 }

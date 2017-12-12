@@ -24,7 +24,7 @@ public class TrigTripleReader {
         for (int i = 0; i < trigFiles.size(); i++) {
            // if (i==200) break;
             File file = trigFiles.get(i);
-            System.out.println("file.getName() = " + file.getName());
+           // System.out.println("file.getName() = " + file.getName());
             try {
                 dataset = RDFDataMgr.loadDataset(file.getAbsolutePath());
                 Iterator<String> it = dataset.listNames();
