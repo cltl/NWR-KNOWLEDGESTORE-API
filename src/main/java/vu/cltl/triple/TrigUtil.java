@@ -972,7 +972,7 @@ public class TrigUtil {
     static Model provenanceModel = null;
     static Model instanceModel = null;
 
-    static void addStatementsToJenaData (Dataset dataset, HashMap<String, ArrayList<Statement>> map) {
+    static public void addStatementsToJenaData (Dataset dataset, HashMap<String, ArrayList<Statement>> map) {
         Set keySet = map.keySet();
         Iterator<String> keys = keySet.iterator();
         while (keys.hasNext()) {
@@ -983,7 +983,7 @@ public class TrigUtil {
         ///RDFDataMgr.write(fos2, instanceModel, RDFFormat.TRIG_PRETTY);
     }
 
-    static Dataset tripleDataToJenaData (TrigTripleData trigTripleData) {
+    static public Dataset tripleDataToJenaData (TrigTripleData trigTripleData) {
         Dataset dataset = TDBFactory.createDataset();
         createModels(dataset);
         addStatementsToJenaData(dataset, trigTripleData.tripleMapInstances);
