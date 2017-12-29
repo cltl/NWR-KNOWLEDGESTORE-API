@@ -19,13 +19,21 @@ public class TrigTripleReader {
 
     static public TrigTripleData readTripleFromTrigFiles (ArrayList<File> trigFiles) {
         TrigTripleData trigTripleData = new TrigTripleData();
-        Dataset dataset = TDBFactory.createDataset();
-
         for (int i = 0; i < trigFiles.size(); i++) {
            // if (i==200) break;
             File file = trigFiles.get(i);
-           // System.out.println("file.getName() = " + file.getName());
-            try {
+            readTriples(trigTripleData, file);
+        }
+        System.out.println("trigTripleData instances = " + trigTripleData.tripleMapInstances.size());
+        System.out.println("trigTripleData others = " + trigTripleData.tripleMapOthers.size());
+        System.out.println("trigTripleData grasp = " + trigTripleData.tripleMapGrasp.size());
+        return trigTripleData;
+    }
+
+
+    static public void readTriples(TrigTripleData trigTripleData, File file) {
+        try {
+                Dataset dataset = TDBFactory.createDataset();
                 dataset = RDFDataMgr.loadDataset(file.getAbsolutePath());
                 Iterator<String> it = dataset.listNames();
                 while (it.hasNext()) {
@@ -119,13 +127,7 @@ public class TrigTripleReader {
                 e.printStackTrace();
             }
 
-        }
-        System.out.println("trigTripleData instances = " + trigTripleData.tripleMapInstances.size());
-        System.out.println("trigTripleData others = " + trigTripleData.tripleMapOthers.size());
-        System.out.println("trigTripleData grasp = " + trigTripleData.tripleMapGrasp.size());
-        return trigTripleData;
     }
-
     static public TrigTripleData readInstanceTripleFromTrigFiles (ArrayList<File> trigFiles) {
         TrigTripleData trigTripleData = new TrigTripleData();
         Dataset dataset = TDBFactory.createDataset();
