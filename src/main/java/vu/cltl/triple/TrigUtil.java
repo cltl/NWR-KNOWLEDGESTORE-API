@@ -70,11 +70,24 @@ public class TrigUtil {
 
     /**
      * KS util
+     * @param subjectUriArrayList
      * @param trigTripleData
      * @return
      */
     public static HashMap<String, ArrayList<Statement>> getPrimaryKnowledgeGraphHashMap (ArrayList<String> subjectUriArrayList, TrigTripleData trigTripleData) {
         HashMap<String, ArrayList<Statement>>  eckgMap = new HashMap<String, ArrayList<Statement>>();
+        addPrimaryKnowledgeGraphHashMap(subjectUriArrayList, eckgMap, trigTripleData);
+        return eckgMap;
+    }
+
+    /**
+     * KS util
+     * @param subjectUriArrayList
+     * @param eckgMap
+     * @param trigTripleData
+     * @return
+     */
+    public static void addPrimaryKnowledgeGraphHashMap (ArrayList<String> subjectUriArrayList, HashMap<String, ArrayList<Statement>>  eckgMap, TrigTripleData trigTripleData) {
         for (int k = 0; k < subjectUriArrayList.size(); k++) {
             String tripleKey =  subjectUriArrayList.get(k);
             ArrayList<Statement> statements = trigTripleData.tripleMapInstances.get(tripleKey);
@@ -85,7 +98,6 @@ public class TrigUtil {
             }
             eckgMap.put(tripleKey, statements);
         }
-        return eckgMap;
     }
 
     static public void  addNewStatements(ArrayList<Statement> statements1, ArrayList<Statement> statements2) {
@@ -147,12 +159,26 @@ public class TrigUtil {
 
     /**
      * KS util
+     * @param subjectUriArrayList
      * @param trigTripleData
      * @return
      */
     public static HashMap<String, ArrayList<Statement>> getSecondaryKnowledgeGraphHashMap (ArrayList<String> subjectUriArrayList,
                                                                                            TrigTripleData trigTripleData) {
         HashMap<String, ArrayList<Statement>>  eckgMap = new HashMap<String, ArrayList<Statement>>();
+        addSecondaryKnowledgeGraphHashMap(subjectUriArrayList, eckgMap, trigTripleData);
+        return eckgMap;
+    }
+
+    /**
+     * KS util
+     * @param subjectUriArrayList
+     * @param eckgMap
+     * @param trigTripleData
+     * @return
+     */
+    public static void addSecondaryKnowledgeGraphHashMap (ArrayList<String> subjectUriArrayList, HashMap<String, ArrayList<Statement>>  eckgMap,
+                                                                                           TrigTripleData trigTripleData) {
         for (int k = 0; k < subjectUriArrayList.size(); k++) {
             String tripleKey =  subjectUriArrayList.get(k);
             ArrayList<Statement> statements = new ArrayList<Statement>();
@@ -178,7 +204,6 @@ public class TrigUtil {
             }
             eckgMap.put(tripleKey, statements);
         }
-        return eckgMap;
     }
 
     static public class ComparePredicate implements Comparator {
