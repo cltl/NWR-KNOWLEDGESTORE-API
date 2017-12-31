@@ -165,19 +165,19 @@ public class TrigUtil {
      */
     public static HashMap<String, ArrayList<Statement>> getSecondaryKnowledgeGraphHashMap (ArrayList<String> subjectUriArrayList,
                                                                                            TrigTripleData trigTripleData) {
-        HashMap<String, ArrayList<Statement>>  eckgMap = new HashMap<String, ArrayList<Statement>>();
-        addSecondaryKnowledgeGraphHashMap(subjectUriArrayList, eckgMap, trigTripleData);
-        return eckgMap;
+        HashMap<String, ArrayList<Statement>>  seckgMap = new HashMap<String, ArrayList<Statement>>();
+        addSecondaryKnowledgeGraphHashMap(subjectUriArrayList, seckgMap, trigTripleData);
+        return seckgMap;
     }
 
     /**
      * KS util
-     * @param subjectUriArrayList
-     * @param eckgMap
+     * @params subjectUriArrayList
+     * @param seckgMap
      * @param trigTripleData
      * @return
      */
-    public static void addSecondaryKnowledgeGraphHashMap (ArrayList<String> subjectUriArrayList, HashMap<String, ArrayList<Statement>>  eckgMap,
+    public static void addSecondaryKnowledgeGraphHashMapOrg (ArrayList<String> subjectUriArrayList, HashMap<String, ArrayList<Statement>>  seckgMap,
                                                                                            TrigTripleData trigTripleData) {
         for (int k = 0; k < subjectUriArrayList.size(); k++) {
             String tripleKey =  subjectUriArrayList.get(k);
@@ -202,7 +202,41 @@ public class TrigUtil {
                 }
 
             }
-            eckgMap.put(tripleKey, statements);
+            seckgMap.put(tripleKey, statements);
+        }
+    }
+
+    /**
+     * KS util
+     * @param subjectUriArrayList
+     * @param seckgMap
+     * @param trigTripleData
+     * @return
+     */
+    public static void addSecondaryKnowledgeGraphHashMap (ArrayList<String> subjectUriArrayList, HashMap<String, ArrayList<Statement>>  seckgMap,
+                                                                                           TrigTripleData trigTripleData) {
+        for (int k = 0; k < subjectUriArrayList.size(); k++) {
+            String tripleKey =  subjectUriArrayList.get(k);
+            ArrayList<Statement> statements = new ArrayList<Statement>();
+            ArrayList<String> objectKeys = new ArrayList<String>();
+            if (trigTripleData.tripleMapOthers.containsKey(tripleKey)) {
+                ArrayList<Statement> semStatements = trigTripleData.tripleMapOthers.get(tripleKey);
+                for (int j = 0; j < semStatements.size(); j++) {
+                    Statement semStatement = semStatements.get(j);
+                    //String objectUri = semStatement.getObject().asLiteral().getString();
+                    String objectUri = getObjectUriValueAsString(semStatement);
+                    //System.out.println("objectUri = " + objectUri);
+                    if (!objectKeys.contains(objectUri)) objectKeys.add(objectUri);
+                }
+            }
+            /// Next we get all the properties of the objects
+            for (int j = 0; j < objectKeys.size(); j++) {
+                String s = objectKeys.get(j);
+                if (trigTripleData.tripleMapInstances.containsKey(s))  {
+                    ArrayList<Statement> objStatements = trigTripleData.tripleMapInstances.get(s);
+                    seckgMap.put(s, objStatements);
+                }
+            }
         }
     }
 

@@ -210,8 +210,8 @@ public class TrigTripleReader {
     static public TrigTripleData readTripleFromTrigFile (File file) {
         TrigTripleData trigTripleData = new TrigTripleData();
         addTriplesFromFile(trigTripleData, file);
-        System.out.println("trigTripleData instances = " + trigTripleData.tripleMapInstances.size());
-        System.out.println("trigTripleData others = " + trigTripleData.tripleMapOthers.size());
+     //   System.out.println("trigTripleData instances = " + trigTripleData.tripleMapInstances.size());
+     //   System.out.println("trigTripleData others = " + trigTripleData.tripleMapOthers.size());
         return trigTripleData;
     }
 }
