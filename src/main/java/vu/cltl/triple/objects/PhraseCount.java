@@ -1,4 +1,4 @@
-package vu.cltl.triple;
+package vu.cltl.triple.objects;
 
 import java.io.Serializable;
 import java.util.ArrayList;

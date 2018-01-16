@@ -5,16 +5,14 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.tdb.TDBFactory;
-import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.RDFFormat;
+import vu.cltl.triple.objects.PhraseCount;
+import vu.cltl.triple.objects.ResourcesUri;
+import vu.cltl.triple.objects.TrigTripleData;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
-
-import static vu.cltl.triple.TrigTripleReader.readTripleFromTrigFiles;
 
 /**
  * Created by piek on 23/06/15.
@@ -948,63 +946,6 @@ public class TrigUtil {
         return acceptedFileList;
     }
 
-    public static void main (String[] args) {
-        String pathToTrigFolder = "";
-        String pathToTrigFile = "";
-        pathToTrigFile = "/Users/piek/Desktop/test/s1a2a_none_none.trig";
-        for (int i = 0; i < args.length; i++) {
-            String arg = args[i];
-            if (arg.equals("--trig-folder") && args.length>(i+1)) {
-                pathToTrigFolder = args[i+1];
-            }
-            else if (arg.equals("--trig-file") && args.length>(i+1)) {
-                pathToTrigFile = args[i+1];
-            }
-        }
-
-        /// process all trig files and build the knowledge graphs
-        ArrayList<File> trigFiles = new ArrayList<File>();
-        if (!pathToTrigFolder.isEmpty()) trigFiles = makeRecursiveFileList(new File(pathToTrigFolder), ".trig");
-        else trigFiles.add(new File(pathToTrigFile));
-
-        vu.cltl.triple.TrigTripleData trigTripleData = readTripleFromTrigFiles(trigFiles);
-       // ArrayList<String> domainEvents = EventTypes.getEventSubjectUris(trigTripleData.tripleMapInstances);
-        ArrayList<String> domainEvents = EventTypes.getAllEventSubjectUris(trigTripleData.tripleMapInstances);
-        HashMap<String, ArrayList<Statement>> eckgMap = TrigUtil.getPrimaryKnowledgeGraphHashMap(domainEvents,trigTripleData);
-        HashMap<String, ArrayList<Statement>> seckgMap = TrigUtil.getSecondaryKnowledgeGraphHashMap(domainEvents,trigTripleData);
-        System.out.println("eckgMap after merge = " + eckgMap.size());
-        try {
-            String path = "";
-            if (!pathToTrigFile.isEmpty()) {
-                path = pathToTrigFile;
-            }
-            else if (!pathToTrigFolder.isEmpty()) {
-                path = pathToTrigFolder+"/trig";
-            }
-            if (!path.isEmpty()) {
-                OutputStream fos1 = new FileOutputStream(path + ".csv");
-                OutputStream fos2 = new FileOutputStream(path +  ".eckg");
-                TrigUtil.printCountedKnowledgeGraph(fos2, eckgMap);
-                TrigUtil.printCountedKnowledgeGraphCsv(fos1, eckgMap);
-                Dataset dataset = TDBFactory.createDataset();
-                createModels(dataset);
-                Set keySet = eckgMap.keySet();
-                Iterator<String> keys = keySet.iterator();
-                while (keys.hasNext()) {
-                    String tripleKey = keys.next();
-                    ArrayList<Statement> statements = eckgMap.get(tripleKey);
-                    instanceModel.add(statements);
-                }
-                RDFDataMgr.write(fos2, instanceModel, RDFFormat.TRIG_PRETTY);
-
-                fos1.close();
-                fos2.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
     static public void createModels (Dataset ds) {
         ds = TDBFactory.createDataset();
         graspModel = ds.getNamedModel(ResourcesUri.nwr + "grasp");
@@ -1059,4 +1000,27 @@ public class TrigUtil {
         return dataset;
     }
 
+
+    public static Map<String, Integer> sortByComparatorDecreasing(Map<String, Integer> unsortMap) {
+
+           // Convert Map to List
+           List<Map.Entry<String, Integer>> list =
+                   new LinkedList<Map.Entry<String, Integer>>(unsortMap.entrySet());
+
+           // Sort list with comparator, to compare the Map values
+           Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
+               public int compare(Map.Entry<String, Integer> o2,
+                                  Map.Entry<String, Integer> o1) {
+                   return (o1.getValue()).compareTo(o2.getValue());
+               }
+           });
+
+           // Convert sorted map back to a Map
+           Map<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
+           for (Iterator<Map.Entry<String, Integer>> it = list.iterator(); it.hasNext();) {
+               Map.Entry<String, Integer> entry = it.next();
+               sortedMap.put(entry.getKey(), entry.getValue());
+           }
+           return sortedMap;
+       }
 }

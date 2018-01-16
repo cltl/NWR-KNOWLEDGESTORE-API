@@ -1,4 +1,4 @@
-package vu.cltl.triple;
+package vu.cltl.triple.objects;
 
 /**
  * Created by piek on 05/01/2017.

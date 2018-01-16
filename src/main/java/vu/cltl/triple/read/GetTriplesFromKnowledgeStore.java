@@ -1,4 +1,4 @@
-package vu.cltl.triple;
+package vu.cltl.triple.read;
 
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -7,6 +7,7 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.*;
 import org.apache.jena.atlas.web.auth.HttpAuthenticator;
 import org.apache.jena.atlas.web.auth.SimpleAuthenticator;
+import vu.cltl.triple.objects.TrigTripleData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class GetTriplesFromKnowledgeStore {
     public static String pass = "ks=2014!";
 
     HttpAuthenticator authenticator = new SimpleAuthenticator(user, pass.toCharArray());
-   // public static vu.cltl.triple.TrigTripleData trigTripleData = new vu.cltl.triple.TrigTripleData();
+   // public static vu.cltl.triple.objects.TrigTripleData trigTripleData = new vu.cltl.triple.objects.TrigTripleData();
 
     static public void setServicePoint (String service, String ks) {
         if (ks.isEmpty()) {

@@ -1,4 +1,6 @@
-package vu.cltl.triple;
+package vu.cltl.triple.read;
+
+import vu.cltl.triple.objects.NameSpaces;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -968,7 +970,7 @@ OPTIONAL { ?object rdf:type owltime:Interval ; owltime:hasEnd ?endtime }
                 "PREFIX framenet: <"+NameSpaces.fn+"> \n" +
                 "PREFIX nwr: <"+NameSpaces.nwrclass+"> \n" +
                 "PREFIX rdf: <"+NameSpaces.rdf+"> \n" +
-                "PREFIX rdfs: <"+NameSpaces.rdfs+"> \n" +
+                "PREFIX rdfs: <"+ NameSpaces.rdfs+"> \n" +
                 "SELECT ?label (COUNT(?type) as ?count) ?type \n" +
                 "WHERE {\n" +
                 "       ?e a sem:Event .\n" +
@@ -1477,10 +1479,10 @@ order by DESC(?count)
 
     static public void main (String [] args) {
         System.out.println(SparqlGenerator.makeSparqlQueryForLightEntityProjectFromKs("<http://www.newsreader-project.eu/project/London>", "5"));
-        //System.out.println(vu.cltl.triple.SparqlGenerator.makeSparqlQueryForCitedSourcesFromKs());
-        //System.out.println(vu.cltl.triple.SparqlGenerator.makeSparqlQueryForAuthorsFromKs());
-        //System.out.println( vu.cltl.triple.SparqlGenerator.makeSparqlQueryForLightEntityProjectFromKs("<http://www.newsreader-project.eu/project/London>"));
-       // System.out.println(vu.cltl.triple.SparqlGenerator.s6);
+        //System.out.println(vu.cltl.triple.read.SparqlGenerator.makeSparqlQueryForCitedSourcesFromKs());
+        //System.out.println(vu.cltl.triple.read.SparqlGenerator.makeSparqlQueryForAuthorsFromKs());
+        //System.out.println( vu.cltl.triple.read.SparqlGenerator.makeSparqlQueryForLightEntityProjectFromKs("<http://www.newsreader-project.eu/project/London>"));
+       // System.out.println(vu.cltl.triple.read.SparqlGenerator.s6);
     }
 
 }

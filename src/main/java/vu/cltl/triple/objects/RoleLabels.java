@@ -1,4 +1,4 @@
-package vu.cltl.triple;
+package vu.cltl.triple.objects;
 
 import eu.kyotoproject.kaf.KafParticipant;
 import eu.kyotoproject.kaf.KafSense;

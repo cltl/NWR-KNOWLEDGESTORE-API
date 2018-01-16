@@ -1,4 +1,4 @@
-package vu.cltl.triple;
+package vu.cltl.triple.objects;
 
 import com.hp.hpl.jena.rdf.model.Model;
 

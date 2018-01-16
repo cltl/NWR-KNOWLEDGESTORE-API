@@ -6,7 +6,8 @@
     <groupId>com.github.cltl</groupId>
     <artifactId>nwr-triple-api</artifactId>
     <version>1.0</version>
-    <description>Toolkit to query the NewsReader KnowledgeStore with SPARQL or read TRiG files and create a JSON</description>
+    <packaging>jar</packaging>
+    <description>Toolkit to query the NewsReader KnowledgeStore with SPARQL or read TRiG files</description>
     <url>http://www.newsreader-project.eu</url>
     <scm>
         <connection>scm:git:git@github.com/cltl/nwr-triple-api</connection>
@@ -58,6 +59,53 @@
             <artifactId>json</artifactId>
             <version>20090211</version>
         </dependency>
+        <dependency>
+            <groupId>eu.fbk.knowledgestore</groupId>
+            <artifactId>ks-client</artifactId>
+            <version>1.7</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.fbk.knowledgestore</groupId>
+            <artifactId>ks-core</artifactId>
+            <version>1.7</version>
+        </dependency>
+
+<!--        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>-->
+
+      <!--  <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            
+        </dependency>-->
+
+<!--        <dependency>
+            <groupId>com.github.cltl</groupId>
+            <artifactId>EventCoreference</artifactId>
+            <version>v3.1.2</version>
+        </dependency>-->
+        
+        <!-- COMPILE+RUNTIME DEPS -->
+           <dependency>
+               <groupId>eu.fbk.rdfpro</groupId>
+               <artifactId>rdfpro-core</artifactId>
+               <version>0.6</version>
+           </dependency>
+        <!-- TEST DEPS -->
+        <dependency>
+            <groupId>eu.fbk.rdfpro</groupId>
+            <artifactId>rdfpro-tql</artifactId>
+            <version>0.6</version>
+        </dependency>
+<!--        <dependency>
+            <groupId>eu.fbk.rdfpro</groupId>
+            <artifactId>rdfpro-groovy</artifactId>
+            <version>0.6</version>
+            <scope>runtime</scope>
+        </dependency>-->
+        
 
 
     </dependencies>
