@@ -6,9 +6,6 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import eu.kyotoproject.kaf.*;
-import eu.newsreader.eventcoreference.output.JenaSerialization;
-import eu.newsreader.eventcoreference.util.FrameTypes;
-import eu.newsreader.eventcoreference.util.Util;
 import org.openrdf.model.vocabulary.SKOS;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -381,75 +378,6 @@ public class SemObject implements Serializable {
         return id;
     }
 
-    public void setIdByDBpediaReferenceRerank() {
-        //// We first check if there has been a rerank of the references if not
-        //// then we are getting the highest scoring external reference, which is the first
-        /*                                                                             -
-              <externalReferences>
-        <externalRef resource="spotlight_v1" reference="http://dbpedia.org/resource/Michigan" confidence="1.0" reftype="en"/>
-        <externalRef resource="spotlight_v1" reference="http://dbpedia.org/resource/List_of_United_States_Senators_from_Michigan" confidence="9.9521784E-14" reftype="en"/>
-              <externalRef resource="vua-type-reranker-v1.0" reference="http://dbpedia.org/resource/North_Dakota" confidence="17"/>
-             vua-type-reranker
-      </externalReferences>
-
-         */
-
-        boolean RERANK = false;
-        for (int i = 0; i < concepts.size(); i++) {
-            KafSense kafSense = concepts.get(i);
-            if (kafSense.getResource().toLowerCase().startsWith("vua-type-reranker")) {
-                id = getNameSpaceTypeReference(kafSense);
-                RERANK = true;
-                break;
-            }
-        }
-        if (!RERANK) {
-            setIdByDBpediaReference();
-        }
-    }
-
-    public void setIdByDBpediaReference() {
-        KafSense topSense = Util.getBestScoringExternalReference(concepts);
-        if (topSense!=null) {
-            if (topSense.getChildren().size()>0) {
-                //// Crosslingual mapping
-/*
-                <externalRef confidence="1.0" reference="http://es.dbpedia.org/resource/Fuerza_Aérea_de_los_Estados_Unidos" reftype="es" resource="spotlight_v1" source="es">
-                <externalRef confidence="1.0" reference="http://dbpedia.org/resource/United_States_Air_Force" reftype="en" resource="wikipedia-db-esEn" source="es"/>
-                </externalRef>
-
-               <externalRef resource="spotlight_v1" reference="http://it.dbpedia.org/resource/Apple" confidence="1.0" reftype="it" source="it">
-               <externalRef resource="wikipedia-db-itEn" reference="http://dbpedia.org/resource/Apple_Inc." confidence="1.0" reftype="en" source="it" />
-        </externalRef>
-
-*/
-                for (int i = 0; i < topSense.getChildren().size(); i++) {
-                    KafSense kafSense = topSense.getChildren().get(i);
-                    //  System.out.println("kafSense.getRefType() = " + kafSense.getRefType());
-                    if (kafSense.getRefType().equals("en")) {
-                        id = getNameSpaceTypeReference(kafSense); //kafSense.getSensecode();
-                        // System.out.println("uri = " + uri);
-                        break;
-                    }
-                }
-
-            }
-            else {
-                if ((topSense.getResource().equalsIgnoreCase("spotlight_v1"))
-                        || (topSense.getSensecode().indexOf("dbpedia.org/") > -1)
-                        ) {
-                /*
-                (5) DBpedia resources are used as classes via rdf:type triples, while
-                    they should be treated as instances, by either:
-                    - using them as the subject of extracted triples (suggested), or
-                    - linking them to entity/event URIs using owl:sameAs triples
-                 */
-                    id = getNameSpaceTypeReference(topSense);
-                }
-            }
-        }
-    }
-
     public String getReference() {
         String reference = "";
         for (int i = 0; i < concepts.size(); i++) {
@@ -508,13 +436,6 @@ public class SemObject implements Serializable {
                     if (phraseCount.getCount() > top) {
                         top = phraseCount.getCount();
                         label = phraseCount.getPhrase();
-/*
-                        if (Util.hasAlphaNumeric(phraseCount.getPhrase())) {
-                            top = phraseCount.getCount();
-                            label = phraseCount.getPhrase();
-                        } else {
-                        }
-*/
                     }
                 }
             }
@@ -868,18 +789,7 @@ public class SemObject implements Serializable {
             if (senseCode.toLowerCase().startsWith("ili-30-")) {
                 senseCode = "eng"+senseCode.substring(6);
             }
-          //  System.out.println(senseCode);
-            if (JenaSerialization.iliReader!=null) {
-                    if (JenaSerialization.iliReader.synsetToILIMap.containsKey(senseCode)) {
-                        senseCode = JenaSerialization.iliReader.synsetToILIMap.get(senseCode);
-                        ref = ResourcesUri.ili + senseCode;
-                    } else {
-                        ref = ResourcesUri.wn + senseCode;
-                    }
-            }
-            else {
-                ref = ResourcesUri.wn + senseCode;
-            }
+            ref = ResourcesUri.wn + senseCode;
         }
         else if (kafSense.getSensecode().toLowerCase().startsWith("ili-30-")) {
             /// this is needed since we get very different resource values from WSD:
@@ -889,14 +799,6 @@ public class SemObject implements Serializable {
              */
             String senseCode = kafSense.getSensecode();
             senseCode = "eng"+senseCode.substring(6);
-            if (JenaSerialization.iliReader!=null) {
-                if (JenaSerialization.iliReader.synsetToILIMap.containsKey(senseCode)) {
-                    senseCode = JenaSerialization.iliReader.synsetToILIMap.get(senseCode);
-                    ref = ResourcesUri.ili + senseCode;
-                } else {
-                    ref = ResourcesUri.wn + senseCode;
-                }
-            }
         }
         else if (kafSense.getSensecode().toLowerCase().startsWith("eng-30-")) {
             /// this is needed since we get very different resource values from WSD:
@@ -906,14 +808,7 @@ public class SemObject implements Serializable {
              */
             String senseCode = kafSense.getSensecode();
             senseCode = "eng"+senseCode.substring(6);
-            if (JenaSerialization.iliReader!=null) {
-                if (JenaSerialization.iliReader.synsetToILIMap.containsKey(senseCode)) {
-                    senseCode = JenaSerialization.iliReader.synsetToILIMap.get(senseCode);
-                    ref = ResourcesUri.ili + senseCode;
-                } else {
-                    ref = ResourcesUri.wn + senseCode;
-                }
-            }
+
         }
         else if (kafSense.getResource().equalsIgnoreCase("cornetto")) {
             ref = ResourcesUri.cornetto + kafSense.getSensecode();
@@ -967,21 +862,6 @@ public class SemObject implements Serializable {
         else if (kafSense.getSensecode().indexOf("dbpedia.org") > -1) {
             ref = kafSense.getSensecode(); /// keep it as it is since the dbpedia URL is complete as it comes from spotlight
           //ref =  Util.cleanDbpediaUri(kafSense.getSensecode(), ResourcesUri.dbp);
-        }
-        else if (kafSense.getSensecode().equalsIgnoreCase("source")) {
-            ref = ResourcesUri.nwrontology + FrameTypes.SOURCE;
-        } else if (kafSense.getSensecode().equalsIgnoreCase("cognition")) {
-            ref = ResourcesUri.nwrontology + FrameTypes.SOURCE;
-        } else if (kafSense.getSensecode().toLowerCase().startsWith("speech")) {
-            ref = ResourcesUri.nwrontology + FrameTypes.SOURCE;
-        } else if (kafSense.getSensecode().equalsIgnoreCase("communication")) {
-            ref = ResourcesUri.nwrontology + FrameTypes.SOURCE;
-        } else if (kafSense.getSensecode().equalsIgnoreCase("grammatical")) {
-            ref = ResourcesUri.nwrontology + FrameTypes.GRAMMATICAL;
-        } else if (kafSense.getSensecode().equalsIgnoreCase("contextual")) {
-            ref = ResourcesUri.nwrontology + FrameTypes.CONTEXTUAL;
-        } else if (kafSense.getSensecode().equalsIgnoreCase("other")) {
-            ref = ResourcesUri.nwrontology + FrameTypes.CONTEXTUAL;
         }
 
         else if (kafSense.getSensecode().isEmpty()) {
@@ -1093,10 +973,7 @@ public class SemObject implements Serializable {
        // System.out.println("anObject.nafMentions.toString() = " + anObject.nafMentions.toString());
         for (int i = 0; i < anObject.getNafMentions().size(); i++) {
             NafMention nafMention = anObject.getNafMentions().get(i);
-            if (!Util.hasMention(this.nafMentions, nafMention)) {
-               // System.out.println("New mention added !!! nafMention.toString() = " + nafMention.toString());
-                this.nafMentions.add(nafMention);
-            }
+            this.nafMentions.add(nafMention);
         }
     }
 

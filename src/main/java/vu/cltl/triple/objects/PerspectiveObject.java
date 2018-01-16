@@ -5,8 +5,10 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDFS;
-import eu.kyotoproject.kaf.*;
-import eu.newsreader.eventcoreference.util.Util;
+import eu.kyotoproject.kaf.KafFactuality;
+import eu.kyotoproject.kaf.KafOpinion;
+import eu.kyotoproject.kaf.KafParticipant;
+import eu.kyotoproject.kaf.KafSense;
 import org.openrdf.model.vocabulary.RDF;
 
 import java.io.UnsupportedEncodingException;
@@ -50,9 +52,6 @@ public class PerspectiveObject {
         return cueMention;
     }
 
-    public void setCueMention(String baseUri, KafSaxParser kafSaxParser, ArrayList<String> eventTermIds) {
-        this.cueMention = Util.getNafMentionForTermIdArrayList(baseUri, kafSaxParser, eventTermIds);
-    }
 
     public void setNafMention(NafMention nafMention) {
         this.nafMention = nafMention;
@@ -105,19 +104,7 @@ public class PerspectiveObject {
     public NafMention getNafMention() {
         return nafMention;
     }
-
-    public void setNafMention(String baseUri, KafSaxParser kafSaxParser, ArrayList<String> eventTermIds) {
-        ArrayList<String> termIds = eventTermIds;
-        for (int j = 0; j < source.getSpanIds().size(); j++) {
-            String s = source.getSpanIds().get(j);
-            termIds.add(s);
-        }
-        for (int j = 0; j < target.getSpanIds().size(); j++) {
-            String s = target.getSpanIds().get(j);
-            termIds.add(s);
-        }
-        this.nafMention = Util.getNafMentionForTermIdArrayList(baseUri, kafSaxParser, termIds);
-    }
+    
 
     public ArrayList<KafSense> getPredicateConcepts() {
         return predicateConcepts;

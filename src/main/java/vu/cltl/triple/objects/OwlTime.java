@@ -5,7 +5,6 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
-import eu.newsreader.eventcoreference.util.TimeLanguage;
 
 import java.io.Serializable;
 
@@ -210,7 +209,6 @@ public class OwlTime implements Serializable {
                 } else {
                     /// publication dates can have all kinds of formats.
                     // November 18, 2004
-                    parseStringDate(date);
                 }
             }
         } catch (NumberFormatException e) {
@@ -389,80 +387,6 @@ public class OwlTime implements Serializable {
             foundTime = -1;
         }
         return foundTime;
-    }
-
-    public int parseStringDateWithDocTimeYearFallBack(String rawdate, OwlTime docOwlTime) {
-        int foundTime = -1;
-        try {
-            String date = removePunctuation(rawdate);
-            String year = TimeLanguage.getYearFromString(date);
-            if (!year.isEmpty()) {
-                this.year = year;
-                foundTime = 1;
-                int month = TimeLanguage.getMonthFromString(date);
-                if (month>-1) {
-                    this.month = (new Integer(month)).toString();
-                    int day = TimeLanguage.getDayFromString(date);
-                    if (day>-1) {
-                        this.day = (new Integer(day).toString());
-                    }
-                }
-            }
-            else {
-                if (!docOwlTime.getYear().isEmpty()) {
-                    int month = TimeLanguage.getMonthWordFromString(date);
-                    if (month>-1) {
-                        foundTime = 1;
-                        this.year = docOwlTime.getYear();
-                        this.month = (new Integer(month)).toString();
-                        if (this.month.length()==1) {
-                            this.month = "0"+this.month;
-                        }
-                        int day = TimeLanguage.getDayFromString(date);
-                        if (day>-1) {
-                            this.day = (new Integer(day).toString());
-                            if (this.day.length()==1) {
-                                this.day = "0"+this.day;
-                            }
-                        }
-                    }
-                    else {
-/*                        int day = getDayFromString(date);
-                        if (day>-1) {
-                            foundTime = 1;
-                            this.year = docOwlTime.getYear();
-                            this.month = docOwlTime.getMonth();
-                            this.day = (new Integer(day).toString());
-                        }*/
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-          //  System.out.println("rawdate = " + rawdate);
-        }
-        return foundTime;
-    }
-
-    public void parseStringDate (String rawdate) {
-        try {
-            String date = removePunctuation(rawdate);
-            String year = TimeLanguage.getYearFromString(date);
-            if (!year.isEmpty()) {
-                this.year = year;
-                int month = TimeLanguage.getMonthFromString(date);
-                if (month>-1) {
-                    this.month = (new Integer(month)).toString();
-                    int day = TimeLanguage.getDayFromString(date);
-                    if (day>-1) {
-                        this.day = (new Integer(day).toString());
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-          //  System.out.println("rawdate = " + rawdate);
-        }
     }
 
 
