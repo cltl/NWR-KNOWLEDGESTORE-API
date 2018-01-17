@@ -119,6 +119,37 @@ public class SemTime extends SemObject implements Serializable {
         }
     }
 
+    public void addToJenaModelDocTimeInstant(Model model, String base) {
+
+        this.getOwlTime().addToJenaModelOwlTimeInstant(model, base);
+
+        Resource resource = model.createResource(this.getURI());
+        if (!this.getTopPhraseAsLabel().isEmpty()) {
+            resource.addProperty(RDFS.label, model.createLiteral(this.getTopPhraseAsLabel()));
+        }
+
+        /*for (int i = 0; i < phraseCounts.size(); i++) {
+            PhraseCount phraseCount = phraseCounts.get(i);
+            resource.addProperty(RDFS.label, model.createLiteral(phraseCount.getPhrase()));
+        }*/
+
+        //resource.addProperty(RDF.type, Sem.Time);
+        // System.out.println("this.getOwlTime().toString() = " + this.getOwlTime().toString());
+        Resource interval = model.createResource(ResourcesUri.owltime + "Instant");
+        resource.addProperty(RDF.type, interval);
+
+        Resource value = model.createResource(this.getOwlTime().getDateStringURI());
+        Property property = model.createProperty(ResourcesUri.owltime + "inDateTime");
+        resource.addProperty(property, value);
+
+        for (int i = 0; i < this.getNafMentions().size(); i++) {
+            NafMention nafMention = this.getNafMentions().get(i);
+            Property gaf = model.createProperty(ResourcesUri.gaf + "denotedBy");
+            Resource targetResource = model.createResource(nafMention.toString());
+            resource.addProperty(gaf, targetResource);
+
+        }
+    }
     public void addToJenaModelDocTimeInstant(Model model) {
 
         this.getOwlTime().addToJenaModelOwlTimeInstant(model);

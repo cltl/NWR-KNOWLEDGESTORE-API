@@ -7,6 +7,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
 /**
  * Created by piek on 4/10/14.
@@ -21,6 +22,8 @@ public class OwlTime implements Serializable {
     //stream classdesc serialVersionUID = -3825371661027150878, local class serialVersionUID = 3238395448961710768
    // stream classdesc serialVersionUID = -3825371661027150878, local class serialVersionUID = 3825371661027150878
    // private static final long serialVersionUID = -3825371661027150878L;
+
+
     private static final long serialVersionUID = 3238395448961710768L;
 
 
@@ -42,7 +45,12 @@ public class OwlTime implements Serializable {
         this.month = "";
         this.year = "";
    }
-
+   public void initNow () {
+       Calendar now = Calendar.getInstance();
+       this.day = (new Integer (now.get(Calendar.DAY_OF_MONTH)).toString());
+       this.month = (new Integer (now.get(Calendar.MONTH)+1).toString());
+       this.year = (new Integer (now.get(Calendar.YEAR)).toString());
+   }
     public void birthOfJC () {
         this.instance = "0000-12-25";
         this.day = "25";
@@ -407,6 +415,23 @@ public class OwlTime implements Serializable {
         return str;
     }
 
+    public String getDateStringURI(String base) {
+        String str = base+this.year;
+        if (!this.month.isEmpty()) {
+            if (this.month.length()==1) {
+                str +="0";
+            }
+            str += month;
+            if (!this.day.isEmpty()) {
+                if (day.length()==1) {
+                    str += "0";
+                }
+                str += day;
+            }
+        }
+        return str;
+    }
+
     public String getDateLabel () {
         String str = this.year;
         if (!this.month.isEmpty()) {
@@ -433,6 +458,36 @@ public class OwlTime implements Serializable {
           */
 
         Resource resource = model.createResource(this.getDateStringURI());
+        Property property = model.createProperty(ResourcesUri.owltime+"DateTimeDescription");
+
+        resource.addProperty(RDF.type, property);
+
+        if (!this.day.isEmpty()) {
+            Property day = model.createProperty(ResourcesUri.owltime+"day");
+            resource.addProperty(day, this.getDayValue(), XSDDatatype.XSDgDay);
+        }
+        if (!this.month.isEmpty()) {
+            Property month = model.createProperty(ResourcesUri.owltime+"month");
+            resource.addProperty(month, this.getMonthValue(),XSDDatatype.XSDgMonth);
+        }
+        if (!this.year.isEmpty()) {
+            Property year = model.createProperty(ResourcesUri.owltime+"year");
+            resource.addProperty(year, this.getYear(),XSDDatatype.XSDgYear);
+            Property unit = model.createProperty(ResourcesUri.owltime+"unitType");
+            Property day = model.createProperty(ResourcesUri.owltime+"unitDay");
+            resource.addProperty(unit, day);
+        }
+    }
+
+    public void addToJenaModelOwlTimeInstant (Model model, String base) {
+                 /*
+             nwr:20010101
+        owltime:day "1"^^xsd:int ;
+        owltime:month "1"^^xsd:int ;
+        owltime:year "2001"^^xsd:int .
+          */
+
+        Resource resource = model.createResource(this.getDateStringURI(base));
         Property property = model.createProperty(ResourcesUri.owltime+"DateTimeDescription");
 
         resource.addProperty(RDF.type, property);

@@ -6,15 +6,9 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.tdb.TDBFactory;
 import eu.kyotoproject.kaf.KafFactuality;
-import eu.kyotoproject.kaf.KafSaxParser;
-import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.RDFFormat;
 import org.openrdf.model.vocabulary.RDF;
 import vu.cltl.triple.objects.*;
 
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -54,9 +48,7 @@ public class JenaSerialization {
         ResourcesUri.prefixModel(defaultModel);
         ResourcesUri.prefixModelNwr(defaultModel);
         ResourcesUri.prefixModelGaf(defaultModel);
-
         ResourcesUri.prefixModelGaf(provenanceModel);
-
         ResourcesUri.prefixModel(instanceModel);
         ResourcesUri.prefixModelNwr(instanceModel);
         ResourcesUri.prefixModelGaf(instanceModel);
@@ -68,84 +60,12 @@ public class JenaSerialization {
         ResourcesUri.prefixSimpleModel(defaultModel);
         ResourcesUri.prefixModelNwr(defaultModel);
         ResourcesUri.prefixModelGaf(defaultModel);
-
         ResourcesUri.prefixModelGaf(provenanceModel);
-
         ResourcesUri.prefixSimpleModel(instanceModel);
         ResourcesUri.prefixModelNwr(instanceModel);
         ResourcesUri.prefixModelGaf(instanceModel);
 
     }
-
-    static public void serializeJena (OutputStream stream,
-                                      ArrayList<SemObject> semEvents,
-                                      ArrayList<SemObject> semActors,
-                                      ArrayList<SemTime> semTimes,
-                                      ArrayList<SemRelation> semRelations,
-                                      boolean ILIURI,
-                                      boolean VERBOSE_MENTIONS) {
-
-
-
-        // create an empty Model
-        createModels();
-
-        // System.out.println("EVENTS");
-        for (int i = 0; i < semEvents.size(); i++) {
-            SemObject semEvent = semEvents.get(i);
-            //semEvent.addToJenaModel(instanceModel, Sem.Event);
-            semEvent.addToJenaModel(instanceModel, Sem.Event, VERBOSE_MENTIONS);
-        }
-
-        //  System.out.println("ACTORS");
-        for (int i = 0; i < semActors.size(); i++) {
-            SemObject semActor = semActors.get(i);
-           // semActor.addToJenaModel(instanceModel, Sem.Actor);
-            semActor.addToJenaModel(instanceModel, Sem.Actor, VERBOSE_MENTIONS);
-        }
-
-        // System.out.println("TIMES");
-        for (int i = 0; i < semTimes.size(); i++) {
-            SemTime semTime = (SemTime) semTimes.get(i);
-            if (semTime.getType().equalsIgnoreCase(TimeTypes.YEAR)) {
-                semTime.addToJenaModelDocTimeInstant(instanceModel);
-                //OR
-                // semTime.addToJenaModelTimeIntervalCondensed(instanceModel);
-            }
-            else if (semTime.getType().equalsIgnoreCase(TimeTypes.QUARTER)) {
-                semTime.addToJenaModelTimeIntervalCondensed(instanceModel);
-            }
-            else if (semTime.getType().equalsIgnoreCase(TimeTypes.MONTH)) {
-                semTime.addToJenaModelDocTimeInstant(instanceModel);
-                //OR
-                // semTime.addToJenaModelTimeIntervalCondensed(instanceModel);
-            }
-            else if (semTime.getType().equalsIgnoreCase(TimeTypes.DURATION)) {
-                semTime.addToJenaModelTimeIntervalCondensed(instanceModel);
-            }
-            else  { /// DATE
-                semTime.addToJenaModelDocTimeInstant(instanceModel);
-            }
-        }
-
-        //System.out.println("RELATIONS");
-        for (int i = 0; i < semRelations.size(); i++) {
-            SemRelation semRelation = semRelations.get(i);
-
-                semRelation.addToJenaDataSet(ds, provenanceModel);
-        }
-
-
-        RDFDataMgr.write(stream, ds, RDFFormat.TRIG_PRETTY);
-       // RDFDataMgr.write(stream, ds, RDFFormat.RDFJSON);
-       // RDFWriter writer = ds.getDefaultModel().getWriter();
-       // writer.write(ds.getDefaultModel(), stream, RDFFormat.RDFJSON);
-       // writer.write(ds.getDefaultModel(), );
-        // defaultModel.write(stream);
-
-    }
-
-
 
     static public void addJenaPerspectiveObjects(String attrBase, String namespace, String property,
                                             ArrayList<PerspectiveObject> perspectiveObjects, int cnt) {
@@ -177,6 +97,31 @@ public class JenaSerialization {
         }
     }
 
+
+
+    static public void addPerspectiveToJenaDataSet (String ns, String attrId, String eventId, ArrayList<String> values) {
+        /*
+        mentionId2      hasAttribution         attributionId1
+                        gaf:generatedBy        mentionId3
+        attributionId1  rdf:value              CERTAIN_POS_FUTURE
+                        rdf:value              POSITIVE
+                        prov:wasAttributedTo   doc-uri
+                        gaf:wasAttributedTo    dbp:Zetsche
+
+         */
+
+        Resource sourceResource = graspModel.createResource(eventId);
+        Resource attributionResource = graspModel.createResource(attrId);
+        Property property = graspModel.createProperty(ns, "wasAttributedTo");
+        attributionResource.addProperty(property, sourceResource);
+        Property valueProperty = graspModel.createProperty(ResourcesUri.grasp,"hasAttribution" );
+
+        for (int i = 0; i < values.size(); i++) {
+            String value = values.get(i);
+            Resource valueResource = graspModel.createResource(ResourcesUri.grasp+value);;
+            attributionResource.addProperty(valueProperty, valueResource);
+        }
+    }
 
     static public void addToJenaDataSet (Model model, String ns, String property,
                                          String attrId, ArrayList<PerspectiveObject> perspectives, String sourceURI) {
@@ -304,54 +249,17 @@ doc-uri
         }
     }
 
-    static public void addDocMetaData(String docId, KafSaxParser kafSaxParser, String project) {
-       // String docId = kafSaxParser.getKafMetaData().getUrl();
-        Resource subject = graspModel.createResource(docId);
+    static public void addSourceMetaData(String sourceId, String authorUri) {
+        Resource subject = graspModel.createResource(sourceId);
         Property property = graspModel.createProperty(ResourcesUri.prov, "wasAttributedTo");
-        String author = kafSaxParser.getKafMetaData().getAuthor();
-        String magazine = kafSaxParser.getKafMetaData().getMagazine();
-        String publisher = kafSaxParser.getKafMetaData().getPublisher();
-        if (!author.isEmpty()) {
-            try {
-                author = URLEncoder.encode(author, "UTF-8");
-                Resource object = graspModel.createResource(ResourcesUri.nwrauthor+author);
-                subject.addProperty(property, object);
-            } catch (UnsupportedEncodingException e) {
-                //  e.printStackTrace();
-            }
-        }
-        if (!magazine.isEmpty()) {
-            try {
-                magazine = URLEncoder.encode(magazine, "UTF-8");
-                Resource object = graspModel.createResource(ResourcesUri.nwrmagazine+magazine);
-                subject.addProperty(property, object);
-            } catch (UnsupportedEncodingException e) {
-                //  e.printStackTrace();
-            }
-        }
-        if (!publisher.isEmpty()) {
-            try {
-                publisher = URLEncoder.encode(publisher, "UTF-8");
-                Resource object = graspModel.createResource(ResourcesUri.nwrpublisher+publisher);
-                subject.addProperty(property, object);
-            } catch (UnsupportedEncodingException e) {
-                //  e.printStackTrace();
-            }
-        }
-        if (!project.isEmpty()) {
-            try {
-                property = graspModel.createProperty(ResourcesUri.rdfs, "comment");
-                project = URLEncoder.encode(project, "UTF-8");
-                Resource object = graspModel.createResource(ResourcesUri.nwrproject+project);
-                subject.addProperty(property, object);
-            } catch (UnsupportedEncodingException e) {
-                //  e.printStackTrace();
-            }
-        }
+        Resource object = graspModel.createResource(authorUri);
+        subject.addProperty(property, object);
     }
 
 
     static public void addJenaCompositeEvent (
+            String sourceId,
+            OwlTime owlTime,
             CompositeEvent compositeEvent,
             boolean VERBOSE_MENTIONS) {
 
@@ -363,184 +271,30 @@ doc-uri
                 semActor.addToJenaModel(instanceModel, Sem.Actor, VERBOSE_MENTIONS);
             }
 
-
-            // System.out.println("TIMES");
-            // System.out.println("compositeEvent.getMySemTimes().size() = " + compositeEvent.getMySemTimes().size());
-            for (int i = 0; i < compositeEvent.getMySemTimes().size(); i++) {
-                SemTime semTime = (SemTime) compositeEvent.getMySemTimes().get(i);
-                //semTime.addToJenaModelTimeInterval(instanceModel);
-                if (semTime.getType().equalsIgnoreCase(TimeTypes.YEAR)) {
-                    semTime.addToJenaModelDocTimeInstant(instanceModel);
-                    //OR
-                    // semTime.addToJenaModelTimeIntervalCondensed(instanceModel);
-                }
-                else if (semTime.getType().equalsIgnoreCase(TimeTypes.QUARTER)) {
-                    semTime.addToJenaModelTimeIntervalCondensed(instanceModel);
-                }
-                else if (semTime.getType().equalsIgnoreCase(TimeTypes.MONTH)) {
-                    semTime.addToJenaModelDocTimeInstant(instanceModel);
-                    //OR
-                    // semTime.addToJenaModelTimeIntervalCondensed(instanceModel);
-                }
-                else if (semTime.getType().equalsIgnoreCase(TimeTypes.DURATION)) {
-                    semTime.addToJenaModelTimeIntervalCondensed(instanceModel);
-                }
-                else  { /// DATE
-                    semTime.addToJenaModelDocTimeInstant(instanceModel);
-                }
-            }
-
+            owlTime.addToJenaModelOwlTimeInstant(instanceModel, sourceId);
             for (int j = 0; j < compositeEvent.getMySemRelations().size(); j++) {
                 SemRelation semRelation = compositeEvent.getMySemRelations().get(j);
-                semRelation.addToJenaDataSet(ds, provenanceModel);
+                semRelation.addSemToJenaDataSet(ds, provenanceModel);
             }
     }
 
     static public void addJenaCompositeEvents (
+            String sourceId,
+            OwlTime owlTime,
             ArrayList<CompositeEvent> compositeEvents,
             boolean VERBOSE_MENTIONS) {
         for (int c = 0; c < compositeEvents.size(); c++) {
             CompositeEvent compositeEvent = compositeEvents.get(c);
-            addJenaCompositeEvent(compositeEvent, VERBOSE_MENTIONS);
+            addJenaCompositeEvent(sourceId, owlTime, compositeEvent, VERBOSE_MENTIONS);
         }
     }
 
-    static public void addJenaCompositeEvents (
-            HashMap<String, ArrayList<CompositeEvent>> semEvents,
-            boolean VERBOSE_MENTIONS) {
-
-
-        Set keySet = semEvents.keySet();
-        Iterator keys = keySet.iterator();
-        while (keys.hasNext()) {
-            String lemma = (String) keys.next();
-            ArrayList<CompositeEvent> compositeEvents = semEvents.get(lemma);
-            addJenaCompositeEvents(compositeEvents, VERBOSE_MENTIONS);
-        }
-
-
-    }
-
-    static public void serializeJenaCompositeEvents (OutputStream stream,
-                                                     HashMap<String, ArrayList<CompositeEvent>> semEvents,
-                                                     boolean VERBOSE_MENTIONS) {
-
-
-
-        createModels();
-        addJenaCompositeEvents(semEvents,VERBOSE_MENTIONS);
-        try {
-            RDFDataMgr.write(stream, ds, RDFFormat.TRIG_PRETTY);
-        } catch (Exception e) {
-          //  e.printStackTrace();
-        }
-    }
-
-    static public void serializeJenaSingleCompositeEvents (OutputStream stream,
-                                                            HashMap<String, CompositeEvent> semEvents,
-                                                           boolean VERBOSE_MENTIONS) {
-
-
-
-        createModels();
-        Set keySet = semEvents.keySet();
-        Iterator<String> keys = keySet.iterator();
-        while (keys.hasNext()) {
-            String key = keys.next();
-            if (DEBUG) System.out.println("key = " + key);
-            CompositeEvent semEvent = semEvents.get(key);
-            if (semEvent!=null) {
-                addJenaCompositeEvent(semEvent, VERBOSE_MENTIONS);
-            }
-        }
-        try {
-            RDFDataMgr.write(stream, ds, RDFFormat.TRIG_PRETTY);
-        } catch (Exception e) {
-           // e.printStackTrace();
-        }
-    }
-
-    static public void serializeJenaSimpleCompositeEvents (OutputStream stream,
-                                                     ArrayList<CompositeEvent> compositeEvents) {
-        createSimpleModels();
-        for (int c = 0; c < compositeEvents.size(); c++) {
-            CompositeEvent compositeEvent = compositeEvents.get(c);
-            addJenaSimpleCompositeEvent(compositeEvent);
-        }
-        try {
-            RDFDataMgr.write(stream, ds, RDFFormat.TRIG_PRETTY);
-        } catch (Exception e) {
-          //  e.printStackTrace();
-        }
-    }
-
-
-
-    static public void addJenaSimpleCompositeEvent (
-            CompositeEvent compositeEvent) {
-        HashMap<String, String> rename = new HashMap<String, String>();
-        compositeEvent.getEvent().addToJenaSimpleModel(rename, instanceModel, Sem.Event);
-        for (int  i = 0; i < compositeEvent.getMySemActors().size(); i++) {
-            SemActor semActor =  compositeEvent.getMySemActors().get(i);
-            semActor.addToJenaSimpleModel(rename, instanceModel, Sem.Actor);
-        }
-        for (int i = 0; i < compositeEvent.getMySemTimes().size(); i++) {
-            SemTime semTime = compositeEvent.getMySemTimes().get(i);
-            semTime.addToJenaModelSimpleDocTimeInstant(instanceModel);
-        }
-        for (int j = 0; j < compositeEvent.getMySemRelations().size(); j++) {
-            SemRelation semRelation = compositeEvent.getMySemRelations().get(j);
-                semRelation.addToJenaDataSetSimple(rename, ds);
-        }
-    }
-
-    static public void serializeJenaCompositeEvents (OutputStream stream,
-                                                     ArrayList<CompositeEvent> semEvents,
-                                                     boolean VERBOSE_MENTIONS) {
+  
 
 
 
 
-        createModels();
 
-        addJenaCompositeEvents(semEvents, VERBOSE_MENTIONS);
-
-        try {
-            RDFDataMgr.write(stream, ds, RDFFormat.TRIG_PRETTY);
-        } catch (Exception e) {
-          //  e.printStackTrace();
-        }
-
-
-    }
-
-    static public void serializeJenaCompositeEventsAndPerspective (OutputStream stream,
-                                                                    ArrayList<CompositeEvent> semEvents,
-                                                                   KafSaxParser kafSaxParser,
-                                                                   String project,
-                                                                   ArrayList<PerspectiveObject> sourcePerspectiveObjects,
-                                                                   ArrayList<PerspectiveObject> authorPerspectiveObjects) {
-
-
-
-
-            createModels();
-            addJenaCompositeEvents(semEvents, false);
-            String docId = kafSaxParser.getKafMetaData().getUrl().replaceAll("#", "HASH");
-            if (!docId.toLowerCase().startsWith("http")) {
-                docId = ResourcesUri.nwrdata + project + "/" + docId;
-            }
-            addDocMetaData(docId, kafSaxParser, project);
-            String attrBase = docId+"/"+"source_attribution/";
-            addJenaPerspectiveObjects(attrBase, ResourcesUri.grasp, "wasAttributedTo",sourcePerspectiveObjects, 1);
-            attrBase = docId+"/"+"doc_attribution/";
-            addJenaPerspectiveObjects(attrBase, ResourcesUri.prov, "wasDerivedFrom", authorPerspectiveObjects, sourcePerspectiveObjects.size()+1);
-        try {
-            RDFDataMgr.write(stream, ds, RDFFormat.TRIG_PRETTY);
-        } catch (Exception e) {
-          //  e.printStackTrace();
-        }
-    }
 
 
 

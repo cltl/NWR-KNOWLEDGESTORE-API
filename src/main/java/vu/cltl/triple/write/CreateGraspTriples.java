@@ -20,7 +20,12 @@ public class CreateGraspTriples {
     static public void main (String[] args) {
         String talk = talkUri+"chat1";
         String author = friendsUri+"Piek";
-        String str = graspTripleString(author, talk, "bite", "rabbit");
+        ArrayList<String> values = new ArrayList<String>();
+        values.add("CERTAIN");
+        values.add("SCARED");
+        values.add("NEGATIVE");
+        values.add("BELIEF");
+        String str = graspTripleString(author, values,talk, "bite", "rabbit");
         try {
             OutputStream fos = new FileOutputStream("leolani.rdf");
             fos.write(str.getBytes());
@@ -30,8 +35,9 @@ public class CreateGraspTriples {
         }
     }
 
-    static CompositeEvent makeCompositeEvent (String sourceId, String eventLabel, String actorLabel) {
+    static CompositeEvent makeCompositeEvent (String sourceId, String eventLabel, String actorLabel, OwlTime owlTime) {
         CompositeEvent compositeEvent = new CompositeEvent();
+
         SemEvent semEvent = new SemEvent();
         semEvent.setId(worldUri+eventLabel);
         semEvent.addPhraseCounts(eventLabel);
@@ -39,28 +45,22 @@ public class CreateGraspTriples {
 
         SemActor semObject1 = new SemActor("ACTOR");
         semObject1.setId(worldUri+actorLabel);
-        semObject1.setLabel(actorLabel);
-
-        SemTime semTime = new SemTime();
-        OwlTime owlTime = new OwlTime();
-        owlTime.setMonth("1");
-        owlTime.setDay("1");
-        owlTime.setYear("2018");
-        semTime.setOwlTime(owlTime);
-
-        SemRelation semRelation1 = new SemRelation();
-        semRelation1.setSubject(semEvent.getURI());
-        semRelation1.addPredicate(ResourcesUri.sem+"hasActor");
-        semRelation1.setObject(semObject1.getURI());
-
-        SemRelation timeRelation = new SemRelation();
-        timeRelation.setSubject(semEvent.getURI());
-        timeRelation.addPredicate(ResourcesUri.sem+"hasTime");
-        timeRelation.setObject(semTime.getURI());
-        compositeEvent.setEvent(semEvent);
+        semObject1.addPhraseCounts(actorLabel);
         compositeEvent.addMySemActor(semObject1);
-        compositeEvent.addMySemTime(semTime);
-        compositeEvent.addMySemRelation(semRelation1);
+
+
+        SemRelation semRelation = new SemRelation();
+        semRelation.setId(sourceId);
+        semRelation.setSubject(semEvent.getURI());
+        semRelation.addPredicate(Sem.hasActor.getLocalName());
+        semRelation.setObject(semObject1.getURI());
+        compositeEvent.addMySemRelation(semRelation);
+        
+        SemRelation timeRelation = new SemRelation();
+        timeRelation.setId(sourceId);
+        timeRelation.setSubject(semEvent.getURI());
+        timeRelation.addPredicate(Sem.hasTime.getLocalName());
+        timeRelation.setObject(owlTime.getDateStringURI(sourceId));
         compositeEvent.addMySemRelation(timeRelation);
 
         return compositeEvent;
@@ -106,30 +106,45 @@ public class CreateGraspTriples {
     }*/
 
     static String graspTripleString (String author,
+                                     ArrayList<String> perspectiveValues,
                                      String sourceId,
                                      String event,
                                      String actor) {
+
+
+        JenaSerialization.createModels();
+        JenaSerialization.ds.getDefaultModel().setNsPrefix("leolaniWorld", "http://cltl.nl/leolani/world/");
+        JenaSerialization.ds.getDefaultModel().setNsPrefix("leolaniTalk", "http://cltl.nl/leolani/talk/");
+
         SemActor semAuthor = new SemActor("ACTOR");
         semAuthor.setId(author);
         semAuthor.setLabel(author);
         String rdfString = "";
+        OwlTime owlTime = new OwlTime();
+        owlTime.initNow();
+
         ArrayList<CompositeEvent> semEvents = new ArrayList<CompositeEvent>();
-        CompositeEvent compositeEvent = makeCompositeEvent(sourceId, event, actor);
+        CompositeEvent compositeEvent = makeCompositeEvent(sourceId, event, actor, owlTime);
         semEvents.add(compositeEvent);
-        ArrayList<PerspectiveObject> authorPerspectiveObjects = new ArrayList<PerspectiveObject>();
-        ArrayList<PerspectiveObject> sourcePerspectiveObjects = new ArrayList<PerspectiveObject>();
+
         PerspectiveObject perspectiveObject = makePerspectiveAuthorObject(semAuthor,
                 compositeEvent.getEvent(),
-                sourceId );
-        authorPerspectiveObjects.add(perspectiveObject);
+                sourceId);
+        String attrBase = sourceId+"/"+"doc_attribution/";
+        perspectiveObject.addToJenaDataSet(JenaSerialization.graspModel, ResourcesUri.prov, attrBase);
 
-        JenaSerialization.createModels();
-        JenaSerialization.addJenaCompositeEvents(semEvents, false);
-
-        String attrBase = sourceId+"/"+"source_attribution/";
+        JenaSerialization.addJenaCompositeEvents(sourceId, owlTime, semEvents, false);
+        JenaSerialization.addSourceMetaData(sourceId, author);
+        JenaSerialization.addPerspectiveToJenaDataSet(ResourcesUri.prov, compositeEvent.getEvent().getURI(), sourceId, perspectiveValues);
+        /*String attrBase = sourceId+"/"+"source_attribution/";
         JenaSerialization.addJenaPerspectiveObjects(attrBase, ResourcesUri.grasp, "wasAttributedTo",sourcePerspectiveObjects, 1);
+
         attrBase = sourceId+"/"+"doc_attribution/";
-        JenaSerialization.addJenaPerspectiveObjects(attrBase, ResourcesUri.prov, "wasDerivedFrom", authorPerspectiveObjects, sourcePerspectiveObjects.size()+1);
+        JenaSerialization.addJenaPerspectiveObjects(attrBase,
+                ResourcesUri.prov, "wasDerivedFrom",
+                authorPerspectiveObjects,
+                sourcePerspectiveObjects.size()+1);*/
+
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             RDFDataMgr.write(os, JenaSerialization.ds, RDFFormat.TRIG_PRETTY);

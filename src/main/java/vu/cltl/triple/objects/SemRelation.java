@@ -7,25 +7,16 @@ import com.hp.hpl.jena.rdf.model.Resource;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
- * User: kyoto
+ * User: Piek
  * Date: 11/15/13
  * Time: 5:13 PM
  * To change this template use File | Settings | File Templates.
  */
 public class SemRelation implements Serializable {
-/*
-    <semRelation id="TOPIC_44_EVENT_COREFERENCE_CORPUS/2413"
-    predicate="semHasTime"
-    subject="TOPIC_44_EVENT_COREFERENCE_CORPUS/e53"
-    object="TOPIC_44_EVENT_COREFERENCE_CORPUS/t246">
 
-    <target id ="TOPIC_44_EVENT_COREFERENCE_CORPUS/TOPIC_8_EVENT_COREFERENCE_CORPUS/s19"/>
-    </semRelation>
-*/
     private String id;
     private ArrayList<String> predicates;
     private String subject;
@@ -44,10 +35,6 @@ public class SemRelation implements Serializable {
 
     public ArrayList<String> getPredicates() {
         return predicates;
-    }
-
-    public void setPredicates(ArrayList<String> predicates) {
-        this.predicates = predicates;
     }
 
     public void addPredicate(String predicate) {
@@ -160,6 +147,7 @@ public class SemRelation implements Serializable {
             return Sem.hasActor;
         }
         else {
+           // System.out.println("type = " + type);
             return Sem.hasSubType;
         }
     }
@@ -208,80 +196,7 @@ public class SemRelation implements Serializable {
     }
 
 
-    public String getRoleRelation (String role) {
-        String  rel = "";
-        String [] fields = role.split(":");
-        if (fields.length==2) {
-            String source = fields[0].trim();
-            String value = fields[1].trim();
-            if (source.isEmpty()) {
-                rel = ResourcesUri.pb+value;
-            }
-            else if (source.equalsIgnoreCase("propbank")) {
-                if (value.indexOf("@")==-1) {
-                    /// skipping propbank/say.01@1
-                    rel = ResourcesUri.pb + value;
-                }
-            }
-            else if (source.equalsIgnoreCase("framenet")) {
-                rel = ResourcesUri.fn+value;
-            }
-            else if (source.equalsIgnoreCase("verbnet")) {
-             //   rel = ResourcesUri.vn+value;
-            }
-            else if (source.equalsIgnoreCase("eso")) {
-                //// IN CASE THE ESO CONSTRAINTS DO NOT INCLUDE THE VERB TYPE
-                int idx = value.indexOf("@");
-                //e.g Removing@translocation-theme
-                if (idx>-1) {
-                    value = value.substring(idx+1);
-                }
-                rel = ResourcesUri.eso+value;
-            }
-            else if (source.equalsIgnoreCase("nombank")) {
-             //   rel = ResourcesUri.nb+value;
-            }
-        }
-        else {
-            if (role.indexOf("@")==-1) {
-                /// skipping propbank/say.01@1
-                rel = ResourcesUri.pb + role;
-            }
-        }
-        return rel;
-    }
-
-    public String getFramenetRoleRelation (String role) {
-        String  rel = "";
-        String [] fields = role.split(":");
-        if (fields.length==2) {
-            String source = fields[0].trim();
-            String value = fields[1].trim();
-            if (source.equalsIgnoreCase("framenet")) {
-                rel = ResourcesUri.fn+value;
-            }
-        }
-        return rel;
-    }
-
-    public String getPropBankRoleRelation (String role) {
-        String  rel = "";
-        String [] fields = role.split(":");
-        if (fields.length==2) {
-            String source = fields[0].trim();
-            String value = fields[1].trim();
-            if (source.equalsIgnoreCase("propbank")) {
-                if (value.indexOf("@")==-1) {
-                    /// skipping propbank/say.01@1
-                    rel = ResourcesUri.pb + value;
-                }
-            }
-        }
-        return rel;
-    }
-
-
-    public void addToJenaDataSet (Dataset ds, Model provenanceModel) {
+    public void addSemToJenaDataSet (Dataset ds, Model provenanceModel) {
 
         Model relationModel = ds.getNamedModel(this.id);
 
@@ -290,50 +205,17 @@ public class SemRelation implements Serializable {
         /// since we no longer distinguish places from actors, we now check the predicates for propbank AM-LOC
         /// if so we use sem:hasPlace otherwise we take the semType value from the hassem predicate
         Property semProperty = null;
-        boolean PLACE = false;
-        boolean ACTOR = false;
         for (int i = 0; i < predicates.size(); i++) {
             String predicate = predicates.get(i);
             if (predicate.equalsIgnoreCase("hasFactBankValue")) {
                 Property factProperty = relationModel.createProperty(ResourcesUri.nwrvalue + predicate);
                 subject.addProperty(factProperty, this.getObject()); /// creates the literal as value
-            }else {
+            }
+            else {
                 semProperty = getSemRelationProperty(predicate);
-                if (isTemporalSemRelationProperty(predicate)) {
-                        subject.addProperty(semProperty, object);
-                        subject.addProperty(Sem.hasTime, object); /// additional hasTime relation to generalize
-                }
-                else {
-                    if (!semProperty.getLocalName().equals(Sem.hasActor.getLocalName()) &&
-                        !semProperty.getLocalName().equals(Sem.hasPlace.getLocalName())) {
-                        predicate = getRoleRelation(predicate);
-                        if (!predicate.isEmpty()) {
-                            Property srlProperty = relationModel.createProperty(predicate);
-                            subject.addProperty(srlProperty, object);
-
-                            String predicateValue = predicate;
-                            int idx = predicateValue.lastIndexOf("/");
-                            if (idx > -1) predicateValue = predicateValue.substring(idx + 1);
-                            if (RoleLabels.isLOCATION(predicateValue)) {
-                                PLACE = true;
-                            } else {
-                                ACTOR = true;
-                            }
-                        }
-                    }
-                }
-
+                subject.addProperty(semProperty, object);
             }
         }
-        //// if at the end of the loop we detected a location role
-        if (PLACE) {
-                subject.addProperty(Sem.hasPlace, object);
-        }
-        //// if at the end of the loop we detect an actor role
-        if (ACTOR) {
-            subject.addProperty(Sem.hasActor, object);
-        }
-
         Resource provenanceResource = provenanceModel.createResource(this.id);
 
         for (int i = 0; i < nafMentions.size(); i++) {
@@ -341,68 +223,9 @@ public class SemRelation implements Serializable {
             Property property = provenanceModel.createProperty(ResourcesUri.gaf+"denotedBy");
             Resource targetResource = provenanceModel.createResource(nafMention.toString());
             provenanceResource.addProperty(property, targetResource);
-
         }
     }
 
-    public void addToJenaDataSetSimple (HashMap<String, String> rename, Dataset ds) {
-
-        Model relationModel = ds.getNamedModel(this.id);
-        if (rename.containsKey(this.getSubject())) { this.setSubject(rename.get(this.getSubject())); }
-        if (rename.containsKey(this.getObject())) { this.setObject(rename.get(this.getObject())); }
-        Resource subject = relationModel.createResource(this.getSubject());
-        Resource object = relationModel.createResource(this.getObject());
-        /// since we no longer distinguish places from actors, we now check the predicates for propbank AM-LOC
-        /// if so we use sem:hasPlace otherwise we take the semType value from the hassem predicate
-        Property semProperty = null;
-        for (int i = 0; i < predicates.size(); i++) {
-            String predicate = predicates.get(i);
-            semProperty = getSemRelationProperty(predicate);
-            if (isTemporalSemRelationProperty(predicate)) {
-                    subject.addProperty(semProperty, object);
-            }
-            else {
-                if (!semProperty.getLocalName().equals(Sem.hasActor.getLocalName()) &&
-                    !semProperty.getLocalName().equals(Sem.hasPlace.getLocalName())) {
-                    predicate = getRoleRelation(predicate);
-                    if (!predicate.isEmpty()) {
-                        Property srlProperty = relationModel.createProperty(predicate);
-                        subject.addProperty(srlProperty, object);
-                    }
-                }
-            }
-        }
-
-    }
-
-    public SemRelation (SemRelation semRelation) {
-        this.setSubject(semRelation.getSubject());
-        this.setObject(semRelation.getObject());
-        this.setPredicates(semRelation.getPredicates());
-        this.setNafMentions(semRelation.getNafMentions());
-    }
-
-    public boolean match (SemRelation semRelation) {
-        if (!this.getSubject().equals(semRelation.getSubject())) {
-            return  false;
-        }
-        if (!this.getObject().equals(semRelation.getObject())) {
-            return  false;
-        }
-        for (int i = 0; i < predicates.size(); i++) {
-            String pred1 =  predicates.get(i);
-            boolean matchPredicate = false;
-            for (int j = 0; j < semRelation.getPredicates().size(); j++) {
-                String pred2 = semRelation.getPredicates().get(j);
-                if (pred1.equalsIgnoreCase(pred2)) {
-                    matchPredicate = true;
-                    break;
-                }
-            }
-            return matchPredicate;
-        }
-        return true;
-    }
 
     public String toString () {
         String str = "";
