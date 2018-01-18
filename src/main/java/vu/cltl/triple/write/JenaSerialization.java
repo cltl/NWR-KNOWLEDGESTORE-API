@@ -17,13 +17,11 @@ public class JenaSerialization {
     static public boolean DEBUG = false;
     static Dataset ds = null;
     static Model graspModel = null;
-    static Model provenanceModel = null;
     static Model instanceModel = null;
 
     static public void createModels (String world) {
         ds = TDBFactory.createDataset();
         graspModel = ds.getNamedModel(ResourcesUri.grasp + "perspectives");
-       // provenanceModel = ds.getNamedModel(ResourcesUri.grasp + "provenance");
         instanceModel = ds.getNamedModel("http://cltl.nl/leolani/world/"+"instances");
     }
 
@@ -34,7 +32,7 @@ public class JenaSerialization {
     }
 
 
-    static public void addPerspectiveToJenaDataSet (String ns,  String mentionId, String sourceId, ArrayList<String> values) {
+    static public void addPerspectiveToJenaDataSet (String ns,  String mentionId, String sourceId, String valueString) {
         /*
             <https://web.archive.org/web/20150906024829/http://www.naturalnews.com/049351_measles_outbreak_MMR_vaccine_Disneyland.html/doc_attribution/attr1_13_22>
             rdf:value               grasp:CERTAIN , grasp:POS , grasp:positive , grasp:FUTURE ;
@@ -44,9 +42,11 @@ public class JenaSerialization {
          */
 
         String attrId = sourceId;
-        for (int i = 0; i < values.size(); i++) {
-            String value = values.get(i);
+        String [] values = valueString.split(";");
+        for (int i = 0; i < values.length; i++) {
+            String value = values[i];
             attrId+=value;
+
         }
         Resource attributionResource = graspModel.createResource(attrId);
         Resource mentionResource = graspModel.createResource(mentionId);
@@ -57,19 +57,22 @@ public class JenaSerialization {
         property = graspModel.createProperty(ResourcesUri.grasp,"wasDerivedFrom" );
         attributionResource.addProperty(property, sourceResource);
 
-        for (int i = 0; i < values.size(); i++) {
-            String value = values.get(i);
+        for (int i = 0; i < values.length; i++) {
+            String value = values[i];
             Resource valueResource = graspModel.createResource(ResourcesUri.grasp+value);;
             attributionResource.addProperty(RDF.value, valueResource);
         }
+
     }
 
 
-    static public void addSourceMetaData(String sourceId, String authorUri) {
+    static public void addSourceMetaData(String sourceId, String authorUri, String time) {
         Resource subject = graspModel.createResource(sourceId);
         Property property = graspModel.createProperty(ResourcesUri.prov, "wasAttributedTo");
         Resource object = graspModel.createResource(authorUri);
         subject.addProperty(property, object);
+        object = graspModel.createResource(time);
+        subject.addProperty(Sem.hasTime, object);
     }
 
 
@@ -77,17 +80,17 @@ public class JenaSerialization {
             CompositeEvent compositeEvent,
             boolean VERBOSE_MENTIONS) {
 
-            compositeEvent.getEvent().addToJenaModel(instanceModel, Sem.Event, VERBOSE_MENTIONS);
+            compositeEvent.getEvent().addToJenaModelLabels(instanceModel, Sem.Event, VERBOSE_MENTIONS);
 
             //  System.out.println("ACTORS");
             for (int  i = 0; i < compositeEvent.getMySemActors().size(); i++) {
                 SemObject semActor = compositeEvent.getMySemActors().get(i);
-                semActor.addToJenaModel(instanceModel, Sem.Actor, VERBOSE_MENTIONS);
+                semActor.addToJenaModelLabels(instanceModel, Sem.Actor, VERBOSE_MENTIONS);
             }
 
             for (int j = 0; j < compositeEvent.getMySemRelations().size(); j++) {
                 SemRelation semRelation = compositeEvent.getMySemRelations().get(j);
-                semRelation.addSemToJenaDataSet(ds, provenanceModel);
+                semRelation.addSemToJenaDataSet(ds);
             }
     }
 

@@ -97,7 +97,7 @@ public class SemRelation implements Serializable {
     }
 
 
-    public void addSemToJenaDataSet (Dataset ds, Model provenanceModel) {
+    public void addSemToJenaDataSet (Dataset ds) {
         Model relationModel = ds.getNamedModel(this.id);
         Resource subject = relationModel.createResource(this.getSubject());
         Resource object = relationModel.createResource(this.getObject());

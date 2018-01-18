@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class WriteStatementsKnowledgeStore implements RDFProcessor {
 
 
-    static String ksAddress = "http://145.100.59.153:50053/";
+
    // private static final Logger LOGGER = LoggerFactory.getLogger(WriteStatementsKnowledgeStore.class);
 
     static String testargs = "--subj http://www.lealani.org/event#1 --pred http://semanticweb.cs.vu.nl/2009/11/sem/hasActor --obj bob --literal";
@@ -28,6 +28,7 @@ public class WriteStatementsKnowledgeStore implements RDFProcessor {
         String subjectUri = "";
         String predicateUri = "";
         String object = "";
+        String ksAddress = "http://145.100.59.153:50053/";
         boolean literal = false;
         if (args.length ==0) {
             args = testargs.split(" ");
@@ -42,6 +43,9 @@ public class WriteStatementsKnowledgeStore implements RDFProcessor {
             }
             else if (arg.equals("--obj") && args.length>(i+1)) {
                 object = args[i+1];
+            }
+            else if (arg.equals("--ks") && args.length>(i+1)) {
+                ksAddress = args[i+1];
             }
             else if (arg.equals("--literal")) {
                 literal = true;
@@ -62,10 +66,10 @@ public class WriteStatementsKnowledgeStore implements RDFProcessor {
             statementArrayList.add(statement);
         }
         System.out.println("statementArrayList = " + statementArrayList.toString());
-        storeTriples(statementArrayList);
+        storeTriples(statementArrayList, ksAddress);
     }
 
-    static public void storeTriples (ArrayList<Statement> statements) {
+    static public void storeTriples (ArrayList<Statement> statements, String ksAddress) {
         KnowledgeStore ksClient  = null;
         if (ksAddress != null) {
             ksClient = Client.builder(ksAddress).compressionEnabled(true).maxConnections(2).validateServer(false).build();
@@ -99,9 +103,4 @@ public class WriteStatementsKnowledgeStore implements RDFProcessor {
     public void apply(RDFSource input, RDFHandler output, int passes) throws RDFSourceException, RDFHandlerException {
 
     }
-
-/*    @Override
-    public CompletableFuture<Void> applyAsync(RDFSource input, RDFHandler output, int passes) {
-        return null;
-    }*/
 }

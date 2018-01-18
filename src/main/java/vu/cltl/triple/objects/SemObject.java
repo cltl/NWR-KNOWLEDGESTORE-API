@@ -598,6 +598,50 @@ public class SemObject implements Serializable {
         }
     }
 
+    public void addToJenaModelLabels(Model model, Resource type, boolean VERBOSE_MENTION) {
+        Resource resource = model.createResource(this.getURI());
+        //// Top phrase
+        String topLabel = this.getTopPhraseAsLabel();
+        if (!topLabel.isEmpty()) {
+            Property property = model.createProperty(ResourcesUri.skos+ SKOS.PREF_LABEL.getLocalName());
+            resource.addProperty(property, model.createLiteral(this.getTopPhraseAsLabel()));
+            //// instead of
+            for (int i = 0; i < phraseCounts.size(); i++) {
+                PhraseCount phraseCount = phraseCounts.get(i);
+                resource.addProperty(RDFS.label, model.createLiteral(phraseCount.getPhraseCount()));
+            }
+        }
+        resource.addProperty(RDF.type, type);
+
+        addConceptsToResource(resource, model, VERBOSE_MENTION);
+
+        for (int i = 0; i < this.getTopics().size(); i++) {
+            KafTopic kafTopic = this.getTopics().get(i);
+            if (!kafTopic.getUri().isEmpty()) {
+                Property property = model.createProperty(ResourcesUri.skos + SKOS.RELATED_MATCH.getLocalName());
+                // resource.addProperty(property, model.createLiteral(kafTopic.getUri()));
+                Resource topicResource = model.createResource(kafTopic.getUri());
+                if (!topicResource.getURI().isEmpty() && !topicResource.getURI().equals("<>")) {
+                    resource.addProperty(property, topicResource);
+                }
+            }
+        }
+
+        for (int i = 0; i < nafMentions.size(); i++) {
+            NafMention nafMention = nafMentions.get(i);
+            Property property = model.createProperty(ResourcesUri.grasp + "denotedBy");
+            Resource targetResource = null;
+            if (VERBOSE_MENTION) {
+                targetResource = model.createResource(nafMention.toStringFull());
+            }
+            else {
+                targetResource = model.createResource(nafMention.toString());
+
+            }
+            resource.addProperty(property, targetResource);
+        }
+    }
+
     public void addToJenaSimpleModel(HashMap<String, String> rename, Model model, Resource type) {
         Resource resource = model.createResource(this.getURI());
         //// Top phrase
@@ -613,19 +657,12 @@ public class SemObject implements Serializable {
             }
             for (int i = 0; i < phraseCounts.size(); i++) {
                 PhraseCount phraseCount = phraseCounts.get(i);
-                // resource.addProperty(RDFS.label, model.createLiteral(phraseCount.getPhraseCount()));
-/*                if (!phraseCount.getPhrase().equalsIgnoreCase(getTopPhraseAsLabel()) && goodPhrase(phraseCount)) {
-                    resource.addProperty(RDFS.label, model.createLiteral(phraseCount.getPhrase()));
-                }*/
                 if (goodPhrase(phraseCount)) {
                     resource.addProperty(RDFS.label, model.createLiteral(phraseCount.getPhrase()));
                 }
             }
         }
-
         addSimpleConceptsToResource(resource, model);
-
-
     }
 
     boolean reasonsToSkip (KafSense kafSense) {
