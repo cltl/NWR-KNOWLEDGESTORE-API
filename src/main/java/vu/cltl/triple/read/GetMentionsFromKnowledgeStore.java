@@ -1,4 +1,4 @@
-package vu.cltl.triple;
+package vu.cltl.triple.read;
 
 import eu.kyotoproject.kaf.KafSaxParser;
 import eu.kyotoproject.kaf.KafWordForm;

@@ -398,6 +398,23 @@ public class OwlTime implements Serializable {
     }
 
 
+    public String getDateString() {
+        String str = this.year;
+        if (!this.month.isEmpty()) {
+            if (this.month.length()==1) {
+                str +="0";
+            }
+            str += month;
+            if (!this.day.isEmpty()) {
+                if (day.length()==1) {
+                    str += "0";
+                }
+                str += day;
+            }
+        }
+        return str;
+    }
+
     public String getDateStringURI() {
         String str = ResourcesUri.nwrtime+this.year;
         if (!this.month.isEmpty()) {

@@ -234,23 +234,6 @@ public class SemTime extends SemObject implements Serializable {
     }
 
 
-/*
-    public void addToJenaModelFutureCondensed(Model model) {
-        this.getOwlTimeBegin().addToJenaModelOwlTimeInstant(model);
-
-        Resource resource = model.createResource(this.getURI());
-        resource.addProperty(RDFS.label, model.createLiteral(this.getTopPhraseAsLabel()));
-
-        Resource interval = model.createResource(ResourcesUri.owltime + "Interval");
-        resource.addProperty(RDF.type, interval);
-
-        Resource value = model.createResource(this.getOwlTimeBegin().getDateStringURI());
-        Property property = model.createProperty(ResourcesUri.owltime + "hasBeginning");
-        resource.addProperty(property, value);
-
-    }
-*/
-
     public void addToJenaModelTimeIntervalCondensed(Model model) {
         if (this.getOwlTimeBegin().getDateLabel().isEmpty() && this.getOwlTimeEnd().getDateLabel().isEmpty()) {
             System.out.println("ERROR FOR INTERVAL: NO BEGIN AND NO END");

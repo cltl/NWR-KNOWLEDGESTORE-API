@@ -23,8 +23,6 @@ public class SemRelation implements Serializable {
     private String object;
     private ArrayList<NafMention> nafMentions;
 
-
-
     public SemRelation() {
         this.nafMentions = new ArrayList<NafMention>();
         this.id = "";
@@ -99,6 +97,18 @@ public class SemRelation implements Serializable {
     }
 
 
+    public void addSemToJenaDataSet (Dataset ds, Model provenanceModel) {
+        Model relationModel = ds.getNamedModel(this.id);
+        Resource subject = relationModel.createResource(this.getSubject());
+        Resource object = relationModel.createResource(this.getObject());
+        Property semProperty = null;
+        for (int i = 0; i < predicates.size(); i++) {
+            String predicate = predicates.get(i);
+            semProperty = getSemRelationProperty(predicate);
+            subject.addProperty(semProperty, object);
+        }
+    }
+
 
     public Property getSemRelationProperty (String type) {
         if (type.equals(Sem.hasTime.getLocalName())) {
@@ -149,80 +159,6 @@ public class SemRelation implements Serializable {
         else {
            // System.out.println("type = " + type);
             return Sem.hasSubType;
-        }
-    }
-
-    static public boolean isTemporalSemRelationProperty (String type) {
-        if (type.endsWith(Sem.hasTime.getLocalName())) {
-            return true;
-        }
-        if (type.endsWith(Sem.hasAtTime.getLocalName())) {
-            return true;
-        }
-        else if (type.endsWith(Sem.hasBeginTime.getLocalName())) {
-            return true;
-        }
-        else if (type.endsWith(Sem.hasEndTime.getLocalName())) {
-            return true;
-        }
-        else if (type.endsWith(Sem.hasFutureTime.getLocalName())) {
-            return true;
-        }
-        else if (type.endsWith(Sem.hasEarliestBeginTime.getLocalName())) {
-            return true;
-        }
-        else if (type.equals(Sem.hasEarliestEndTime.getLocalName())) {
-            return true;
-        }
-        else if (type.endsWith(Sem.hasFutureTimeStamp.getLocalName())) {
-            return true;
-        }
-        else if (type.endsWith(Sem.hasBeginTimeStamp.getLocalName())) {
-            //BiographyNet uses sem:hasBeginTimeStamp
-            return true;
-        }
-        else if (type.endsWith(Sem.hasEndTimeStamp.getLocalName())) {
-            return true;
-        }
-        else if (type.endsWith(Sem.hasEarliestBeginTimeStamp.getLocalName())) {
-          //  return Sem.hasFutureTimeStamp;
-            return true;
-        }
-        else if (type.endsWith(Sem.hasEarliestEndTimeStamp.getLocalName())) {
-          //  return Sem.hasFutureTimeStamp;
-            return true;
-        }
-        return false;
-    }
-
-
-    public void addSemToJenaDataSet (Dataset ds, Model provenanceModel) {
-
-        Model relationModel = ds.getNamedModel(this.id);
-
-        Resource subject = relationModel.createResource(this.getSubject());
-        Resource object = relationModel.createResource(this.getObject());
-        /// since we no longer distinguish places from actors, we now check the predicates for propbank AM-LOC
-        /// if so we use sem:hasPlace otherwise we take the semType value from the hassem predicate
-        Property semProperty = null;
-        for (int i = 0; i < predicates.size(); i++) {
-            String predicate = predicates.get(i);
-            if (predicate.equalsIgnoreCase("hasFactBankValue")) {
-                Property factProperty = relationModel.createProperty(ResourcesUri.nwrvalue + predicate);
-                subject.addProperty(factProperty, this.getObject()); /// creates the literal as value
-            }
-            else {
-                semProperty = getSemRelationProperty(predicate);
-                subject.addProperty(semProperty, object);
-            }
-        }
-        Resource provenanceResource = provenanceModel.createResource(this.id);
-
-        for (int i = 0; i < nafMentions.size(); i++) {
-            NafMention nafMention = nafMentions.get(i);
-            Property property = provenanceModel.createProperty(ResourcesUri.gaf+"denotedBy");
-            Resource targetResource = provenanceModel.createResource(nafMention.toString());
-            provenanceResource.addProperty(property, targetResource);
         }
     }
 

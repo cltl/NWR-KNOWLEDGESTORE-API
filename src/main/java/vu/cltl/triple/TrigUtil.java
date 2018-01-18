@@ -959,21 +959,14 @@ public class TrigUtil {
         Model defaultModel = ds.getDefaultModel();
         ResourcesUri.prefixModel(defaultModel);
         ResourcesUri.prefixModelNwr(defaultModel);
-        ResourcesUri.prefixModelGaf(defaultModel);
+        ResourcesUri.prefixModelGrasp(defaultModel);
     }
 
     static void prefixModels (Dataset ds) {
         Model defaultModel = ds.getDefaultModel();
         ResourcesUri.prefixModel(defaultModel);
         ResourcesUri.prefixModelNwr(defaultModel);
-        ResourcesUri.prefixModelGaf(defaultModel);
-
-        ResourcesUri.prefixModelGaf(provenanceModel);
-
-        ResourcesUri.prefixModel(instanceModel);
-        ResourcesUri.prefixModelNwr(instanceModel);
-        ResourcesUri.prefixModelGaf(instanceModel);
-
+        ResourcesUri.prefixModelGrasp(defaultModel);
     }
 
     static Model graspModel = null;

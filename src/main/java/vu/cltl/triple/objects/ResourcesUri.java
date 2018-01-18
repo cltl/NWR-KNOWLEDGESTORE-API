@@ -49,7 +49,6 @@ public class ResourcesUri {
     static public void prefixModel (Model model) {
         model.setNsPrefix("wn", ResourcesUri.wn);
         model.setNsPrefix("ili", ResourcesUri.ili);
-      //  model.setNsPrefix("cornetto", ResourcesUri.cornetto);
         model.setNsPrefix("fn", ResourcesUri.fn);
         model.setNsPrefix("nwrdata", ResourcesUri.nwrdata);
         model.setNsPrefix("nwrontology", ResourcesUri.nwrontology);
@@ -79,11 +78,8 @@ public class ResourcesUri {
         model.setNsPrefix("wn", ResourcesUri.wn);
         model.setNsPrefix("ili", ResourcesUri.ili);
         model.setNsPrefix("fn", ResourcesUri.fn);
-        model.setNsPrefix("nwrdata", ResourcesUri.nwrdata);
-        model.setNsPrefix("nwrontology", ResourcesUri.nwrontology);
         model.setNsPrefix("eso", ResourcesUri.eso);
         model.setNsPrefix("pb", ResourcesUri.pb);
-        model.setNsPrefix("gaf", ResourcesUri.gaf);
         model.setNsPrefix("sem", ResourcesUri.sem);
         model.setNsPrefix("owl", ResourcesUri.owl);
         model.setNsPrefix("time", ResourcesUri.owltime);
@@ -93,6 +89,8 @@ public class ResourcesUri {
     }
 
     static public void prefixModelNwr (Model model) {
+        model.setNsPrefix("nwrdata", ResourcesUri.nwrdata);
+        model.setNsPrefix("nwrontology", ResourcesUri.nwrontology);
         model.setNsPrefix("nwr", ResourcesUri.nwr);
         model.setNsPrefix("nwrauthor", ResourcesUri.nwrauthor);
         model.setNsPrefix("nwrpublisher", ResourcesUri.nwrpublisher);
@@ -100,7 +98,7 @@ public class ResourcesUri {
        // model.setNsPrefix("nwrsourceowner", ResourcesUri.nwrsourceowner);
     }
 
-    static public void prefixModelGaf (Model model) {
+    static public void prefixModelGrasp (Model model) {
          model.setNsPrefix("grasp", ResourcesUri.grasp);
         model.setNsPrefix("graspAttribution", ResourcesUri.graspAttribution);
         model.setNsPrefix("graspSentiment", ResourcesUri.graspSentiment);

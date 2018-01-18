@@ -585,7 +585,7 @@ public class SemObject implements Serializable {
 
         for (int i = 0; i < nafMentions.size(); i++) {
             NafMention nafMention = nafMentions.get(i);
-            Property property = model.createProperty(ResourcesUri.gaf + "denotedBy");
+            Property property = model.createProperty(ResourcesUri.grasp + "denotedBy");
             Resource targetResource = null;
             if (VERBOSE_MENTION) {
                 targetResource = model.createResource(nafMention.toStringFull());

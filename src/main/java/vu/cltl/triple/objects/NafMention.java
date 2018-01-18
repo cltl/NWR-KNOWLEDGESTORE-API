@@ -85,7 +85,6 @@ public class NafMention implements Serializable {
             String s = tokensIds.get(i);
             KafWordForm kafWordForm = kafSaxParser.getWordForm(s);
             if (kafWordForm!=null) {
-                //System.out.println(kafWordForm.getSent()+" = " + kafWordForm.getWf());
                 sentence = kafWordForm.getSent();
                 break;
             }
@@ -97,7 +96,6 @@ public class NafMention implements Serializable {
             String s = tokensIds.get(i);
             KafWordForm kafWordForm = kafSaxParser.getWordForm(s);
             if (kafWordForm!=null) {
-                //System.out.println(kafWordForm.getSent()+" = " + kafWordForm.getWf());
                 paragraph = kafWordForm.getPara();
                 break;
             }
@@ -109,7 +107,6 @@ public class NafMention implements Serializable {
             String s = tokensIds.get(i);
             KafWordForm kafWordForm = kafSaxParser.getWordForm(s);
             if (kafWordForm!=null) {
-                //System.out.println(kafWordForm.getSent()+" = " + kafWordForm.getWf());
                 if (sentence.equals(kafWordForm.getSent())) {
                    if (!sentenceText.isEmpty()) {
                         sentenceText+=" ";
