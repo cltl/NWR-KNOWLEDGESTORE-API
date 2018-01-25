@@ -611,7 +611,9 @@ public class SemObject implements Serializable {
                 resource.addProperty(RDFS.label, model.createLiteral(phraseCount.getPhraseCount()));
             }
         }
-        resource.addProperty(RDF.type, type);
+        if (type!=null) {
+            resource.addProperty(RDF.type, type);
+        }
 
         addConceptsToResource(resource, model, VERBOSE_MENTION);
 

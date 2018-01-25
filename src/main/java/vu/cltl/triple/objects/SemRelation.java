@@ -109,6 +109,17 @@ public class SemRelation implements Serializable {
         }
     }
 
+    public void addRelationToJenaDataSet (Dataset ds) {
+            Model relationModel = ds.getNamedModel(this.id);
+            Resource subject = relationModel.createResource(this.getSubject());
+            Resource object = relationModel.createResource(this.getObject());
+            for (int i = 0; i < predicates.size(); i++) {
+                String predicate = predicates.get(i);
+                Property semProperty = relationModel.createProperty(predicate);
+                subject.addProperty(semProperty, object);
+            }
+        }
+
 
     public Property getSemRelationProperty (String type) {
         if (type.equals(Sem.hasTime.getLocalName())) {

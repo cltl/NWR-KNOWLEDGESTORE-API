@@ -80,6 +80,7 @@ public class ResourcesUri {
         model.setNsPrefix("fn", ResourcesUri.fn);
         model.setNsPrefix("eso", ResourcesUri.eso);
         model.setNsPrefix("pb", ResourcesUri.pb);
+        model.setNsPrefix("dbp", ResourcesUri.dbp);
         model.setNsPrefix("sem", ResourcesUri.sem);
         model.setNsPrefix("owl", ResourcesUri.owl);
         model.setNsPrefix("time", ResourcesUri.owltime);

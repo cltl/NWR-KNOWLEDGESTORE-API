@@ -32,7 +32,7 @@ public class JenaSerialization {
     }
 
 
-    static public void addPerspectiveToJenaDataSet (String ns,  String mentionId, String sourceId, String valueString) {
+    static public String addPerspectiveToJenaDataSet (String ns,  String mentionId, String sourceId, String valueString) {
         /*
             <https://web.archive.org/web/20150906024829/http://www.naturalnews.com/049351_measles_outbreak_MMR_vaccine_Disneyland.html/doc_attribution/attr1_13_22>
             rdf:value               grasp:CERTAIN , grasp:POS , grasp:positive , grasp:FUTURE ;
@@ -62,7 +62,7 @@ public class JenaSerialization {
             Resource valueResource = graspModel.createResource(ResourcesUri.grasp+value);;
             attributionResource.addProperty(RDF.value, valueResource);
         }
-
+        return attrId;
     }
 
 
@@ -70,8 +70,10 @@ public class JenaSerialization {
         Resource subject = graspModel.createResource(sourceId);
         Property property = graspModel.createProperty(ResourcesUri.prov, "wasAttributedTo");
         Resource object = graspModel.createResource(authorUri);
+        Resource type = graspModel.createResource(ResourcesUri.prov+"Turn") ;
         subject.addProperty(property, object);
         object = graspModel.createResource(time);
+        subject.addProperty(RDF.type, type);
         subject.addProperty(Sem.hasTime, object);
     }
 
@@ -101,6 +103,20 @@ public class JenaSerialization {
             CompositeEvent compositeEvent = compositeEvents.get(c);
             addJenaCompositeEvent( compositeEvent, VERBOSE_MENTIONS);
         }
+    }
+
+    static public void addJenaSemRelation (SemRelation semRelation, boolean VERBOSE_MENTIONS) {
+        semRelation.addSemToJenaDataSet(ds);
+    }
+    static public void addJenaRelation (SemRelation semRelation, boolean VERBOSE_MENTIONS) {
+        semRelation.addRelationToJenaDataSet(ds);
+    }
+    static public void addJenaObject (SemObject subject, String type, boolean VERBOSE_MENTIONS) {
+        Resource typeResource = null;
+        if (!type.isEmpty()) {
+            typeResource = instanceModel.createResource(type);
+        }
+        subject.addToJenaModelLabels(instanceModel, typeResource, VERBOSE_MENTIONS);
     }
 
   
