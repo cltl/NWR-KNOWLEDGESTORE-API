@@ -5,10 +5,7 @@ import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
 import vu.cltl.triple.objects.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 
 public class CreateGraspTriples {
@@ -19,14 +16,14 @@ public class CreateGraspTriples {
     static public final String worldDate = "http://cltl.nl/leolani/date/";
     static Integer offsetStart = 0;
     
-/*
-    static String testparameters = "--source chat1 --turn 1 --author-name Piek " +
+
+    static String testparameters1 = "--source chat1 --turn 1 --author-name Piek " +
             "--subject-label bite --subject-type http://www.newsreader-project.eu/domain-ontology#Attack " +
             "--predicate-uri http://semanticweb.cs.vu.nl/2009/11/sem/hasActor " +
             "--object-label rabbit --object-type http://dbpedia.org/resource/Animal " +
             "--perspective CERTAIN;SCARED;NEGATIVE;BELIEF";
-*/
-    static String testparameters = "--source chat1 --turn 1 --author-name Piek " +
+
+    static String testparameters2 = "--source chat1 --turn 1 --author-name Piek " +
             "--subject-label Selene --subject-type http://dbpedia.org/resource/Person " +
             "--predicate-uri comesFrom " +
             "--object-label Mexico --object-type http://dbpedia.org/resource/Country " +
@@ -46,7 +43,8 @@ public class CreateGraspTriples {
         String turn = "";
         offsetStart = 0;
         if (args.length==0) {
-            args = testparameters.split(" ");
+           // args = testparameters1.split(" ");
+            args = testparameters2.split(" ");
         }
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
@@ -88,11 +86,21 @@ public class CreateGraspTriples {
             authorURI = friendsUri + authorName;
         }
         if (!predicate.isEmpty()) {
-            String str = "";
-            str = graspEntityTripleString(sourceId, turn, authorURI, authorName, perspective, subjectLabel, subjectUri, subjectType, predicate, objectLabel, objectUri, objectType);
+            Dataset dataset  = null;
+            dataset = CreateGraspTriples.graspDataSet(sourceId, turn, authorURI, authorName, perspective, subjectLabel, subjectUri, subjectType, predicate, objectLabel, objectUri, objectType);
             try {
-                OutputStream fos = new FileOutputStream("leolani.rdf");
-                fos.write(str.getBytes());
+                File ofile = new File ("leolani.rdf");
+                if (ofile.exists()) {
+                   // TrigUtil.mergeWithDataSet(dataset, ofile);
+                }
+                OutputStream fos = new FileOutputStream(ofile);
+                RDFDataMgr.write(fos, dataset, RDFFormat.TRIG_PRETTY);
+/*
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                String rdfString = new String(os.toByteArray(),"UTF-8");
+                System.out.println("rdfString = " + rdfString);
+                os.close();
+*/
                 fos.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -100,6 +108,10 @@ public class CreateGraspTriples {
         }
     }
 
+
+    /*
+
+     */
     static CompositeEvent makeCompositeEvent (String sourceId,
                                               String turn,
                                               Integer sentenceId,

@@ -35,7 +35,7 @@ public class feedBrain {
                 String objectLabel = "";
                 String objectUri = "";
                 String objectType = "";
-                String turn = "";
+                String turn = "1";
         if (args.length==0) {
             args = testparameters3.split(" ");
         }

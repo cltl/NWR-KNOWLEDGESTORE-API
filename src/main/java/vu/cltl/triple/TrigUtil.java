@@ -5,6 +5,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.tdb.TDBFactory;
+import org.apache.jena.riot.RDFDataMgr;
 import vu.cltl.triple.objects.PhraseCount;
 import vu.cltl.triple.objects.ResourcesUri;
 import vu.cltl.triple.objects.TrigTripleData;
@@ -22,6 +23,20 @@ public class TrigUtil {
     static final public String provenanceGraph = "http://www.newsreader-project.eu/provenance";
     static final public String instanceGraph = "http://www.newsreader-project.eu/instances";
 
+    static public void mergeWithDataSet (Dataset data, File file ) {
+        Dataset dataset = RDFDataMgr.loadDataset(file.getAbsolutePath());
+        Iterator<String> it = dataset.listNames();
+        while (it.hasNext()) {
+            String name = it.next();
+            Model model = data.getNamedModel(name);
+            Model namedModel = dataset.getNamedModel(name);
+            StmtIterator siter = namedModel.listStatements();
+            while (siter.hasNext()) {
+                Statement s = siter.nextStatement();
+                model.add(s);
+            }
+        }
+    }
 
     /** KS util
      * Obtains type statistics from KG
