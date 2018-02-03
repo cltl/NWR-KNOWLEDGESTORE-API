@@ -32,7 +32,7 @@ public class JenaSerialization {
     }
 
 
-    static public String addPerspectiveToJenaDataSet (String ns,  String mentionId, String sourceId, String valueString) {
+    static public String addPerspectiveToJenaDataSet (String mentionId, String sourceId, String valueString) {
         /*
             <https://web.archive.org/web/20150906024829/http://www.naturalnews.com/049351_measles_outbreak_MMR_vaccine_Disneyland.html/doc_attribution/attr1_13_22>
             rdf:value               grasp:CERTAIN , grasp:POS , grasp:positive , grasp:FUTURE ;
@@ -49,8 +49,12 @@ public class JenaSerialization {
 
         }
         Resource attributionResource = graspModel.createResource(attrId);
+
+        Resource attrType = graspModel.createResource(ResourcesUri.grasp+"Attribution") ;
+        attributionResource.addProperty(RDF.type,attrType );
+
         Resource mentionResource = graspModel.createResource(mentionId);
-        Property property = graspModel.createProperty(ns, "isAttributionFor");
+        Property property = graspModel.createProperty(ResourcesUri.grasp, "isAttributionFor");
         attributionResource.addProperty(property, mentionResource);
 
         Resource sourceResource = graspModel.createResource(sourceId);
@@ -70,7 +74,7 @@ public class JenaSerialization {
         Resource subject = graspModel.createResource(sourceId);
         Property property = graspModel.createProperty(ResourcesUri.prov, "wasAttributedTo");
         Resource object = graspModel.createResource(authorUri);
-        Resource type = graspModel.createResource(ResourcesUri.prov+"Turn") ;
+        Resource type = graspModel.createResource(ResourcesUri.grasp+"Chat") ;
         subject.addProperty(property, object);
         object = graspModel.createResource(time);
         subject.addProperty(RDF.type, type);
@@ -92,7 +96,7 @@ public class JenaSerialization {
 
             for (int j = 0; j < compositeEvent.getMySemRelations().size(); j++) {
                 SemRelation semRelation = compositeEvent.getMySemRelations().get(j);
-                semRelation.addSemToJenaDataSet(ds);
+                semRelation.addSemToJenaDataSet(instanceModel, ds, VERBOSE_MENTIONS);
             }
     }
 
@@ -106,11 +110,12 @@ public class JenaSerialization {
     }
 
     static public void addJenaSemRelation (SemRelation semRelation, boolean VERBOSE_MENTIONS) {
-        semRelation.addSemToJenaDataSet(ds);
+        semRelation.addSemToJenaDataSet(instanceModel, ds, VERBOSE_MENTIONS);
     }
     static public void addJenaRelation (SemRelation semRelation, boolean VERBOSE_MENTIONS) {
-        semRelation.addRelationToJenaDataSet(ds);
+        semRelation.addSemToJenaDataSet(instanceModel, ds, VERBOSE_MENTIONS);
     }
+
     static public void addJenaObject (SemObject subject, String type, boolean VERBOSE_MENTIONS) {
         Resource typeResource = null;
         if (!type.isEmpty()) {

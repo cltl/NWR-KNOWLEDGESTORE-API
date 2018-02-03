@@ -101,6 +101,9 @@ public class NafMention implements Serializable {
             }
         }
     }
+    public void setParagraph(String par) {
+        paragraph = par;
+    }
 
     public void setSentenceText(KafSaxParser kafSaxParser) {
         for (int i = 0; i < tokensIds.size(); i++) {

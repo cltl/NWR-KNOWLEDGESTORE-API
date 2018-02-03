@@ -12,31 +12,41 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 public class CreateGraspTriples {
-    static boolean VERBOSE_MENTION = false;
+    static boolean VERBOSE_MENTION = true;
     static public final String talkUri = "http://cltl.nl/leolani/talk/";
     static public final String friendsUri = "http://cltl.nl/leolani/friends/";
     static public final String worldUri = "http://cltl.nl/leolani/world/";
     static public final String worldDate = "http://cltl.nl/leolani/date/";
     static Integer offsetStart = 0;
     
-    static String testparameters1 = "--source chat1 --author-name Piek --event-label bite --event-type http://www.newsreader-project.eu/domain-ontology#Attack --actor-label rabbit --actor-type http://dbpedia.org/resource/Animal --perspective CERTAIN;SCARED;NEGATIVE;BELIEF";
-    static String testparameters2 = "--source chat1 --author-name Piek --event-label Selene --event-type http://dbpedia.org/resource/Person --predicate-uri comesFrom --actor-label Mexico --actor-type http://dbpedia.org/resource/Country --perspective CERTAIN;SCARED;NEGATIVE;BELIEF";
+/*
+    static String testparameters = "--source chat1 --turn 1 --author-name Piek " +
+            "--subject-label bite --subject-type http://www.newsreader-project.eu/domain-ontology#Attack " +
+            "--predicate-uri http://semanticweb.cs.vu.nl/2009/11/sem/hasActor " +
+            "--object-label rabbit --object-type http://dbpedia.org/resource/Animal " +
+            "--perspective CERTAIN;SCARED;NEGATIVE;BELIEF";
+*/
+    static String testparameters = "--source chat1 --turn 1 --author-name Piek " +
+            "--subject-label Selene --subject-type http://dbpedia.org/resource/Person " +
+            "--predicate-uri comesFrom " +
+            "--object-label Mexico --object-type http://dbpedia.org/resource/Country " +
+            "--perspective CERTAIN;SCARED;NEGATIVE;BELIEF";
     static public void main (String[] args) {
         String authorName = "";
         String authorURI = "";
         String sourceId = "";
         String predicate = "";
         String perspective = "";
-        String eventLabel = "";
-        String eventUri = "";
-        String eventType = "";
-        String actorLabel = "";
-        String actorUri = "";
-        String actorType = "";
+        String subjectLabel = "";
+        String subjectUri = "";
+        String subjectType = "";
+        String objectLabel = "";
+        String objectUri = "";
+        String objectType = "";
+        String turn = "";
         offsetStart = 0;
         if (args.length==0) {
-            //args = testparameters1.split(" ");
-            args = testparameters2.split(" ");
+            args = testparameters.split(" ");
         }
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
@@ -46,26 +56,29 @@ public class CreateGraspTriples {
             else if (arg.equals("--source") && args.length>(i+1)) {
                 sourceId = args[i+1];
             }
-            else if (arg.equals("--event-label") && args.length>(i+1)) {
-                eventLabel = args[i+1];
+            else if (arg.equals("--turn") && args.length>(i+1)) {
+                turn = args[i+1];
             }
-            else if (arg.equals("--event-uri") && args.length>(i+1)) {
-                eventLabel = args[i+1];
+            else if (arg.equals("--subject-label") && args.length>(i+1)) {
+                subjectLabel = args[i+1];
             }
-            else if (arg.equals("--event-type") && args.length>(i+1)) {
-                eventType = args[i+1];
+            else if (arg.equals("--subject-uri") && args.length>(i+1)) {
+                subjectLabel = args[i+1];
+            }
+            else if (arg.equals("--subject-type") && args.length>(i+1)) {
+                subjectType = args[i+1];
             }
             else if (arg.equals("--predicate-uri") && args.length>(i+1)) {
                 predicate = args[i+1];
             }
-            else if (arg.equals("--actor-label") && args.length>(i+1)) {
-                actorLabel = args[i+1];
+            else if (arg.equals("--object-label") && args.length>(i+1)) {
+                objectLabel = args[i+1];
             }
-            else if (arg.equals("--actor-uri") && args.length>(i+1)) {
-                actorUri = args[i+1];
+            else if (arg.equals("--object-uri") && args.length>(i+1)) {
+                objectUri = args[i+1];
             }
-            else if (arg.equals("--actor-type") && args.length>(i+1)) {
-                actorType = args[i+1];
+            else if (arg.equals("--object-type") && args.length>(i+1)) {
+                objectType = args[i+1];
             }
             else if (arg.equals("--perspective") && args.length>(i+1)) {
                 perspective = args[i+1];
@@ -74,23 +87,25 @@ public class CreateGraspTriples {
         if (authorURI.isEmpty()) {
             authorURI = friendsUri + authorName;
         }
-        String str = "";
-        if (predicate.isEmpty()) {
-            str = graspEventTripleString(sourceId, authorURI, authorName, perspective, eventLabel, eventUri, actorLabel, actorUri);
-        }
-        else {
-            str = graspEntityTripleString(sourceId, authorURI, authorName, perspective, eventLabel, eventUri, eventType, predicate, actorLabel, actorUri, actorType);
-        }
-        try {
-            OutputStream fos = new FileOutputStream("leolani.rdf");
-            fos.write(str.getBytes());
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (!predicate.isEmpty()) {
+            String str = "";
+            str = graspEntityTripleString(sourceId, turn, authorURI, authorName, perspective, subjectLabel, subjectUri, subjectType, predicate, objectLabel, objectUri, objectType);
+            try {
+                OutputStream fos = new FileOutputStream("leolani.rdf");
+                fos.write(str.getBytes());
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     static CompositeEvent makeCompositeEvent (String sourceId,
+                                              String turn,
+                                              Integer sentenceId,
+                                              Integer paragraphId,
+                                              Integer offsetStart,
+                                              Integer offsetEnd,
                                               String eventLabel,
                                               String eventUri,
                                               String actorLabel,
@@ -100,7 +115,10 @@ public class CreateGraspTriples {
         SemObject semEvent = makeSemObject(sourceId, eventLabel, eventUri, "EVENT");
         compositeEvent.setEvent(semEvent);
         SemObject semObject = makeSemObject(sourceId, actorLabel, actorUri, "ACTOR");
-        SemRelation semRelation = makeSemRelation(sourceId, semEvent, Sem.hasActor.getLocalName() , semObject);
+        compositeEvent.addMySemActor(semObject);
+        String statementId = sourceId+"statement"+turn;
+        SemRelation semRelation = makeSemRelation(sourceId, statementId,
+                semEvent, Sem.hasActor.getLocalName() , semObject,sentenceId, paragraphId,  offsetStart, offsetEnd);
         compositeEvent.addMySemRelation(semRelation);
         SemRelation timeRelation = makeTimeRelation(sourceId, semEvent,Sem.hasTime.getLocalName(), owlTime);
         compositeEvent.addMySemRelation(timeRelation);
@@ -126,14 +144,26 @@ public class CreateGraspTriples {
     }
 
     static SemRelation makeSemRelation (String sourceId,
-                                     SemObject subject,
-                                     String property,
-                                     SemObject object) {
+                                        String statementId,
+                                        SemObject subject,
+                                        String property,
+                                        SemObject object,
+                                        Integer sentenceId,
+                                        Integer paragraphId,
+                                        Integer offsetStart,
+                                        Integer offsetEnd) {
                SemRelation semRelation = new SemRelation();
-               semRelation.setId(sourceId);
+               semRelation.setId(statementId);
                semRelation.setSubject(subject.getURI());
                semRelation.addPredicate(property);
                semRelation.setObject(object.getURI());
+               NafMention nafMention = new NafMention();
+               nafMention.setBaseUri(sourceId+"#");
+               nafMention.setOffSetStart(offsetStart.toString());
+               nafMention.setOffSetEnd(offsetEnd.toString());
+               if (sentenceId>0) nafMention.setSentence(sentenceId.toString());
+               if (paragraphId>0) nafMention.setParagraph(paragraphId.toString());
+               semRelation.addMention(nafMention);
                return semRelation;
     }
 
@@ -149,31 +179,9 @@ public class CreateGraspTriples {
          return timeRelation;
     }
 
-    static public String graspEventTripleString (String sourceId,
-                                            String authorUri,
-                                     String authorName,
-                                     String perspectiveValues,
-                                     String eventLabel,
-                                     String eventUri,
-                                     String actorLabel,
-                                     String actorUri) {
-
-        String rdfString = "";
-
-        Dataset ds = graspDataSet(sourceId, authorUri, authorName, perspectiveValues, eventLabel,eventUri,actorLabel,actorUri);
-
-        try {
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            RDFDataMgr.write(os, ds, RDFFormat.TRIG_PRETTY);
-            rdfString = new String(os.toByteArray(),"UTF-8");
-            os.close();
-        } catch (Exception e) {
-            //  e.printStackTrace();
-        }
-        return rdfString;
-    }
 
     static public String graspEntityTripleString (String sourceId,
+                                            String turn,
                                             String authorUri,
                                             String authorName,
                                             String perspectiveValues,
@@ -187,7 +195,7 @@ public class CreateGraspTriples {
 
         String rdfString = "";
 
-        Dataset ds = graspDataSet(sourceId, authorUri, authorName, perspectiveValues, subjectLabel,subjectUri,subjectType, predicateUri, objectLabel,objectUri, objectType);
+        Dataset ds = graspDataSet(sourceId, turn, authorUri, authorName, perspectiveValues, subjectLabel,subjectUri,subjectType, predicateUri, objectLabel,objectUri, objectType);
 
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -200,60 +208,7 @@ public class CreateGraspTriples {
         return rdfString;
     }
 
-    static public Dataset graspDataSet (String sourceId, String authorUri,
-                                             String authorName,
-                                             String perspectiveValues,
-                                             String eventLabel,
-                                             String eventUri,
-                                             String actorLabel,
-                                             String actorUri) {
-
-        JenaSerialization.createModels("http://cltl.nl/leolani/world/");
-        JenaSerialization.prefixModels();
-        JenaSerialization.ds.getDefaultModel().setNsPrefix("leolaniWorld", "http://cltl.nl/leolani/world/");
-        JenaSerialization.ds.getDefaultModel().setNsPrefix("leolaniTalk", "http://cltl.nl/leolani/talk/");
-        JenaSerialization.ds.getDefaultModel().setNsPrefix("leolaniTime", "http://cltl.nl/leolani/date/");
-        JenaSerialization.ds.getDefaultModel().setNsPrefix("leolaniFriends", "http://cltl.nl/leolani/friends/");
-
-        SemObject semAuthor = new SemObject("AUTHOR");
-        semAuthor.setId(authorUri);
-        semAuthor.addPhraseCounts(authorName);
-
-        OwlTime owlTime = new OwlTime();
-        owlTime.initNow();
-        owlTime.addToJenaModelOwlTimeInstant(JenaSerialization.instanceModel,worldDate);
-
-        String sourceUri = talkUri+sourceId+"#"+authorName+owlTime.getDateString();
-
-        ArrayList<CompositeEvent> semEvents = new ArrayList<CompositeEvent>();
-        if (eventUri.isEmpty()) {
-            eventUri = worldUri + authorName + owlTime.getDateString() + eventLabel;
-        }
-        if (actorUri.isEmpty()) {
-            actorUri = worldUri + actorLabel;
-        }
-        CompositeEvent compositeEvent = makeCompositeEvent(sourceUri, eventLabel, eventUri, actorLabel, actorUri, owlTime);
-        semEvents.add(compositeEvent);
-        JenaSerialization.addJenaCompositeEvents( semEvents, VERBOSE_MENTION);
-
-        JenaSerialization.addSourceMetaData(sourceUri, authorUri, "http://cltl.nl/leolani/date/"+owlTime.getDateString());
-        ArrayList<NafMention> mentions = compositeEvent.getEvent().getNafMentions();
-        for (int i = 0; i < mentions.size(); i++) {
-            NafMention nafMention =  mentions.get(i);
-            String nafUri = "";
-            if (VERBOSE_MENTION) {
-                nafUri = nafMention.toStringFull();
-            }
-            else {
-                nafUri = nafMention.toString();
-            }
-            JenaSerialization.addPerspectiveToJenaDataSet(ResourcesUri.prov, nafUri, sourceUri, perspectiveValues);
-        }
-        return JenaSerialization.ds;
-    }
-
-
-    static public Dataset graspDataSet (String sourceId, String authorUri,
+    static public Dataset graspDataSet (String sourceId, String turn, String authorUri,
                                              String authorName,
                                              String perspectiveValues,
                                              String subjectLabel,
@@ -279,7 +234,7 @@ public class CreateGraspTriples {
         owlTime.initNow();
         owlTime.addToJenaModelOwlTimeInstant(JenaSerialization.instanceModel,worldDate);
 
-        String sourceUri = talkUri+sourceId+"#"+authorName+owlTime.getDateString();
+        String sourceUri = talkUri+sourceId+authorName+owlTime.getDateString();
 
         if (subjectUri.isEmpty()) {
             subjectUri = worldUri + authorName + owlTime.getDateString() + subjectLabel;
@@ -294,11 +249,21 @@ public class CreateGraspTriples {
         JenaSerialization.addJenaObject( subject, subjectType, VERBOSE_MENTION);
         JenaSerialization.addJenaObject( object, objectType,VERBOSE_MENTION);
 
+        Integer sentence = 1;
+        Integer paragraph = Integer.parseInt(turn);
+        Integer offsetStart = 0;
+        Integer offSetEnd = subjectLabel.length()+objectLabel.length();
+        String statementId = sourceUri+"statement"+turn;
+        SemRelation semRelation = makeSemRelation(sourceUri, statementId, subject, predicateUri, object, sentence, paragraph, offsetStart, offSetEnd);
+
+        JenaSerialization.addJenaRelation( semRelation, VERBOSE_MENTION);
+
 
         JenaSerialization.addSourceMetaData(sourceUri, authorUri, "http://cltl.nl/leolani/date/"+owlTime.getDateString());
-        ArrayList<NafMention> mentions = subject.getNafMentions();
-        for (int i = 0; i < mentions.size(); i++) {
-            NafMention nafMention =  mentions.get(i);
+
+        ArrayList<NafMention> mentions = semRelation.getNafMentions();
+        for (int m = 0; m < mentions.size(); m++) {
+            NafMention nafMention =  mentions.get(m);
             String nafUri = "";
             if (VERBOSE_MENTION) {
                 nafUri = nafMention.toStringFull();
@@ -306,14 +271,100 @@ public class CreateGraspTriples {
             else {
                 nafUri = nafMention.toString();
             }
-            String attributionId = JenaSerialization.addPerspectiveToJenaDataSet(ResourcesUri.prov, nafUri, sourceUri, perspectiveValues);
-            SemRelation relation = makeSemRelation(sourceUri, subject, predicateUri, object);
-          //  SemRelation time = makeTimeRelation(sourceUri, subject, Sem.hasTime.getLocalName(), owlTime);
-            JenaSerialization.addJenaRelation( relation, VERBOSE_MENTION);
-          //  JenaSerialization.addJenaRelation( time, VERBOSE_MENTION);
+            JenaSerialization.addPerspectiveToJenaDataSet(nafUri, sourceUri, perspectiveValues);
         }
+
         return JenaSerialization.ds;
     }
+
+    //////////////////////
+    /*
+        static public String graspEventTripleString (String sourceId,
+                                                String turn,
+                                                String authorUri,
+                                         String authorName,
+                                         String perspectiveValues,
+                                         String subjectLabel,
+                                         String subjectUri,
+                                         String objectLabel,
+                                         String objectUri) {
+
+            String rdfString = "";
+
+            Dataset ds = graspDataSet(sourceId, turn, authorUri, authorName, perspectiveValues, subjectLabel,subjectUri,objectLabel,objectUri);
+
+            try {
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                RDFDataMgr.write(os, ds, RDFFormat.TRIG_PRETTY);
+                rdfString = new String(os.toByteArray(),"UTF-8");
+                os.close();
+            } catch (Exception e) {
+                //  e.printStackTrace();
+            }
+            return rdfString;
+        }
+    */
+
+    /*static public Dataset graspDataSet (String sourceId, String turn, String authorUri,
+                                              String authorName,
+                                              String perspectiveValues,
+                                              String subjectLabel,
+                                              String subjectUri,
+                                              String objectLabel,
+                                              String objectUri) {
+
+         JenaSerialization.createModels("http://cltl.nl/leolani/world/");
+         JenaSerialization.prefixModels();
+         JenaSerialization.ds.getDefaultModel().setNsPrefix("leolaniWorld", "http://cltl.nl/leolani/world/");
+         JenaSerialization.ds.getDefaultModel().setNsPrefix("leolaniTalk", "http://cltl.nl/leolani/talk/");
+         JenaSerialization.ds.getDefaultModel().setNsPrefix("leolaniTime", "http://cltl.nl/leolani/date/");
+         JenaSerialization.ds.getDefaultModel().setNsPrefix("leolaniFriends", "http://cltl.nl/leolani/friends/");
+
+         SemObject semAuthor = new SemObject("AUTHOR");
+         semAuthor.setId(authorUri);
+         semAuthor.addPhraseCounts(authorName);
+
+         OwlTime owlTime = new OwlTime();
+         owlTime.initNow();
+         owlTime.addToJenaModelOwlTimeInstant(JenaSerialization.instanceModel,worldDate);
+
+         String sourceUri = talkUri+sourceId+authorName+owlTime.getDateString();
+
+         ArrayList<CompositeEvent> semEvents = new ArrayList<CompositeEvent>();
+         if (subjectUri.isEmpty()) {
+             subjectUri = worldUri + authorName + owlTime.getDateString() + subjectLabel;
+         }
+         if (objectUri.isEmpty()) {
+             objectUri = worldUri + objectLabel;
+         }
+         Integer sentence = 1;
+         Integer paragraph = Integer.parseInt(turn);
+         Integer offsetStart = 0;
+         Integer offSetEnd = subjectLabel.length()+objectLabel.length();
+         CompositeEvent compositeEvent = makeCompositeEvent(sourceUri, turn, sentence, paragraph, offsetStart, offSetEnd, subjectLabel, subjectUri, objectLabel, objectUri, owlTime);
+         semEvents.add(compositeEvent);
+         JenaSerialization.addJenaCompositeEvents( semEvents, VERBOSE_MENTION);
+
+         JenaSerialization.addSourceMetaData(sourceUri, authorUri, "http://cltl.nl/leolani/date/"+owlTime.getDateString());
+         for (int i = 0; i < compositeEvent.getMySemRelations().size(); i++) {
+             SemRelation semRelation = compositeEvent.getMySemRelations().get(i);
+             ArrayList<NafMention> mentions = semRelation.getNafMentions();
+             for (int m = 0; m < mentions.size(); m++) {
+                 NafMention nafMention =  mentions.get(m);
+                 String nafUri = "";
+                 if (VERBOSE_MENTION) {
+                     nafUri = nafMention.toStringFull();
+                 }
+                 else {
+                     nafUri = nafMention.toString();
+                 }
+                 JenaSerialization.addPerspectiveToJenaDataSet(nafUri, sourceUri, perspectiveValues);
+             }
+         }
+
+         return JenaSerialization.ds;
+     }*/
+
 
 }
 

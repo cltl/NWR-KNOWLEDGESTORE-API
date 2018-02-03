@@ -6,13 +6,11 @@ import eu.fbk.knowledgestore.client.Client;
 import eu.fbk.rdfpro.RDFProcessor;
 import eu.fbk.rdfpro.RDFSource;
 import eu.fbk.rdfpro.RDFSourceException;
-import org.openrdf.model.Literal;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.ValueFactory;
+import org.openrdf.model.*;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
+import vu.cltl.triple.objects.ResourcesUri;
 
 import java.util.ArrayList;
 
@@ -53,19 +51,21 @@ public class WriteStatementsKnowledgeStore implements RDFProcessor {
         }
         ArrayList<Statement> statementArrayList = new ArrayList<Statement>();
         ValueFactory valueFactory = ValueFactoryImpl.getInstance();
+        Resource ng = valueFactory.createURI(ResourcesUri.grasp, "g1");
         URI subject = valueFactory.createURI(subjectUri);
         URI sem = valueFactory.createURI(predicateUri);//ResourcesUri.sem, "hasTime"
         if (literal) {
             Literal objectLiteral = valueFactory.createLiteral(object);
-            Statement statement = valueFactory.createStatement(subject, sem, objectLiteral);
+            Statement statement = valueFactory.createStatement(subject, sem, objectLiteral, ng);
             statementArrayList.add(statement);
         }
         else {
             URI objectUri = valueFactory.createURI(object);
-            Statement statement = valueFactory.createStatement(subject, sem, objectUri);
+            Statement statement = valueFactory.createStatement(subject, sem, objectUri, ng);
+
             statementArrayList.add(statement);
         }
-        System.out.println("statementArrayList = " + statementArrayList.toString());
+        //System.out.println("statementArrayList = " + statementArrayList.toString());
         storeTriples(statementArrayList, ksAddress);
     }
 

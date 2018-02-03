@@ -4,6 +4,7 @@ import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -97,29 +98,39 @@ public class SemRelation implements Serializable {
     }
 
 
-    public void addSemToJenaDataSet (Dataset ds) {
+    public void addSemToJenaDataSet (Model instanceModel, Dataset ds, boolean VERBOSE_MENTION) {
+        /// We first add the statement itself as an object to the instanceModel
+        Resource statement = instanceModel.createResource(this.id);
+        Resource type = instanceModel.createResource(ResourcesUri.grasp+"Statement") ;
+        statement.addProperty(RDF.type, type);
+
+        /// Now we add the triple to the statement object
         Model relationModel = ds.getNamedModel(this.id);
         Resource subject = relationModel.createResource(this.getSubject());
         Resource object = relationModel.createResource(this.getObject());
-        Property semProperty = null;
         for (int i = 0; i < predicates.size(); i++) {
             String predicate = predicates.get(i);
-            semProperty = getSemRelationProperty(predicate);
-            subject.addProperty(semProperty, object);
-        }
-    }
+            Property property = relationModel.createProperty(predicate);
 
-    public void addRelationToJenaDataSet (Dataset ds) {
-            Model relationModel = ds.getNamedModel(this.id);
-            Resource subject = relationModel.createResource(this.getSubject());
-            Resource object = relationModel.createResource(this.getObject());
-            for (int i = 0; i < predicates.size(); i++) {
-                String predicate = predicates.get(i);
-                Property semProperty = relationModel.createProperty(predicate);
-                subject.addProperty(semProperty, object);
+            subject.addProperty(property, object);
+        }
+
+        for (int i = 0; i < nafMentions.size(); i++) {
+            NafMention nafMention = nafMentions.get(i);
+            Property property = instanceModel.createProperty(ResourcesUri.grasp + "denotedBy");
+            Resource targetResource = null;
+            if (VERBOSE_MENTION) {
+                targetResource = instanceModel.createResource(nafMention.toStringFull());
             }
+            else {
+                targetResource = instanceModel.createResource(nafMention.toString());
+
+            }
+            statement.addProperty(property, targetResource);
         }
 
+        
+    }
 
     public Property getSemRelationProperty (String type) {
         if (type.equals(Sem.hasTime.getLocalName())) {
