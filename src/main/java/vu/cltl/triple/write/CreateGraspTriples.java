@@ -6,6 +6,8 @@ import org.apache.jena.riot.RDFFormat;
 import vu.cltl.triple.objects.*;
 
 import java.io.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 public class CreateGraspTriples {
@@ -269,7 +271,15 @@ public class CreateGraspTriples {
         Integer paragraph = Integer.parseInt(turn);
         Integer offsetStart = 0;
         Integer offSetEnd = subjectLabel.length()+objectLabel.length();
-        String statementId = sourceUri+"statement"+turn;
+        //String statementId = sourceUri+"statement"+turn;
+        /// how unique should this URI be?
+        /// we want to capture different attributions for the same triple so basically it is a triple ID
+
+        String statementId = talkUri+subject.getURI()+predicateUri+object.getURI();
+        String checkSum = getCheckSum(subject.getURI()+predicateUri+object.getURI());
+        if (checkSum!=null) {
+            statementId = talkUri+checkSum;
+        }
         SemRelation semRelation = makeSemRelation(sourceUri, statementId, subject, predicateUri, object, sentence, paragraph, offsetStart, offSetEnd);
 
         JenaSerialization.addJenaRelation( semRelation, VERBOSE_MENTION);
@@ -293,6 +303,21 @@ public class CreateGraspTriples {
         return JenaSerialization.ds;
     }
 
+    static String getCheckSum(String str) {
+        StringBuffer sb = null;
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(str.getBytes());
+            byte[] digest = md.digest();
+            sb = new StringBuffer();
+            for (byte b : digest) {
+                sb.append(String.format("%02x", b & 0xff));
+            }
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
+    }
     //////////////////////
     /*
         static public String graspEventTripleString (String sourceId,

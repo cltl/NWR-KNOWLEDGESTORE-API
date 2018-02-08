@@ -21,17 +21,31 @@ public class storeGraspStatementInKnowledgeStore {
             " --subject-label bite --subject-type http://www.newsreader-project.eu/domain-ontology#Attack" +
             " --predicate-uri http://semanticweb.cs.vu.nl/2009/11/sem/hasActor" +
             " --object-label rabbit --object-type http://dbpedia.org/resource/Animal" +
-            " --perspective CERTAIN;SCARED;NEGATIVE;BELIEF";
+            " --perspective CERTAIN;SCARED;NEGATIVE;BELIEF" +
+            " --debug"
+            ;
     static String testparameters2 = "--ks 145.100.57.176 --source chat2 --turn 1 --author-name Piek" +
             " --subject-label Selene --subject-type http://dbpedia.org/resource/Person" +
             " --predicate-uri http://www.semanticweb.org/leolani/N2MY/comesFrom" +
             " --object-label Mexico --object-type http://dbpedia.org/resource/Country" +
-            " --perspective LIKE";
+            " --perspective LIKE" +
+            " --debug"
+            ;
     static String testparameters3 = "--ks 145.100.57.176 --source chat2 --turn 2 --author-name Bram" +
             " --subject-label Selene --subject-type http://dbpedia.org/resource/Person" +
             " --predicate-uri http://www.semanticweb.org/leolani/N2MY/knows" +
             " --object-label Piek --object-type http://dbpedia.org/resource/Person" +
-            " --perspective SCARED";
+            " --perspective SCARED" +
+            " --debug"
+            ;
+
+    static String testparameters4 = "--ks 145.100.57.176 --source chat2 --turn 2 --author-name Piek" +
+            " --subject-label Selene --subject-type http://dbpedia.org/resource/Person" +
+            " --predicate-uri http://www.semanticweb.org/leolani/N2MY/knows" +
+            " --object-label Piek --object-type http://dbpedia.org/resource/Person" +
+            " --perspective LIKE" +
+            " --debug"
+            ;
 
     static String usage = "Usage:\n"+
             "--ks               IP address of the knowledge store\n"+
@@ -67,7 +81,7 @@ public class storeGraspStatementInKnowledgeStore {
         String address = "http://145.100.57.176:50053/";
         if (args.length==0) {
             System.out.println(usage);
-            args = testparameters3.split(" ");
+            args = testparameters4.split(" ");
         }
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
