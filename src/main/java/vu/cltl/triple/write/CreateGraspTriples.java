@@ -220,7 +220,9 @@ public class CreateGraspTriples {
         return rdfString;
     }
 
-    static public Dataset graspDataSet (String sourceId, String turn, String authorUri,
+    static public Dataset graspDataSet (     String sourceId,
+                                             String turn,
+                                             String authorUri,
                                              String authorName,
                                              String perspectiveValues,
                                              String subjectLabel,
@@ -249,10 +251,12 @@ public class CreateGraspTriples {
         String sourceUri = talkUri+sourceId+authorName+owlTime.getDateString();
 
         if (subjectUri.isEmpty()) {
-            subjectUri = worldUri + authorName + owlTime.getDateString() + subjectLabel;
+           // subjectUri = worldUri + authorName + owlTime.getDateString() + subjectLabel;
+            subjectUri = worldUri + subjectLabel;
         }
         if (objectUri.isEmpty()) {
-            objectUri = worldUri + authorName + owlTime.getDateString() + objectLabel;
+          //  objectUri = worldUri + authorName + owlTime.getDateString() + objectLabel;
+            objectUri = worldUri + objectLabel;
         }
 
         SemObject subject = makeSemObject(sourceUri, subjectLabel, subjectUri, "ENTITY");

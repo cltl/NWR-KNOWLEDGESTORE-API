@@ -26,7 +26,7 @@ public class WriteStatementsKnowledgeStore implements RDFProcessor {
         String subjectUri = "";
         String predicateUri = "";
         String object = "";
-        String ksAddress = "http://145.100.59.153:50053/";
+        String ksAddress = "http://145.100.57.176:50053/";
         boolean literal = false;
         if (args.length ==0) {
             args = testargs.split(" ");
