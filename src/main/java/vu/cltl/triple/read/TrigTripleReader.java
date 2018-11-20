@@ -125,7 +125,7 @@ public class TrigTripleReader {
                 dataset = null;
             } catch (Exception e) {
                 System.out.println("file = " + file.getName());
-                e.printStackTrace();
+               // e.printStackTrace();
             }
 
     }
