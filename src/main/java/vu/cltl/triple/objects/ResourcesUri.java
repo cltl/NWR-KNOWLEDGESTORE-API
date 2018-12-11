@@ -21,7 +21,8 @@ public class ResourcesUri {
     final static public String nwrvalue = "http://www.newsreader-project.eu/ontologies/value#";
     final static public String nwrontology = "http://www.newsreader-project.eu/ontologies/";
     //final static public String eso = "http://www.newsreader-project.eu/ontologies/eso#";
-    final static public String eso = "http://www.newsreader-project.eu/domain-ontology#";
+    //final static public String eso = "http://www.newsreader-project.eu/domain-ontology#";
+    final static public String eso = "http://cltl.nl/ontology/eso#";
     final static public String wn = "http://www.newsreader-project.eu/ontologies/pwn3.0/";
     final static public String ili = "http://globalwordnet.org/ili/";
     final static public String cornetto = "http://www.newsreader-project.eu/ontologies/cornetto2.1/";
@@ -75,6 +76,7 @@ public class ResourcesUri {
     }
 
     static public void prefixSimpleModel (Model model) {
+        model.setNsPrefix("nwro", ResourcesUri.nwrontology);
         model.setNsPrefix("wn", ResourcesUri.wn);
         model.setNsPrefix("ili", ResourcesUri.ili);
         model.setNsPrefix("fn", ResourcesUri.fn);
@@ -87,6 +89,9 @@ public class ResourcesUri {
         model.setNsPrefix("skos", ResourcesUri.skos);
         model.setNsPrefix("rdf", ResourcesUri.rdf);
         model.setNsPrefix("rdfs", ResourcesUri.rdfs);
+        model.setNsPrefix("gaf", ResourcesUri.gaf);
+        model.setNsPrefix("nwrtime", ResourcesUri.nwrtime);
+        model.setNsPrefix("nwrdata", ResourcesUri.nwrdata);
     }
 
     static public void prefixModelNwr (Model model) {
