@@ -3,8 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="f0716247-5c26-4b3c-b292-720cecaf80f2" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/nwr-triple-api-1.0-jar-with-dependencies.jar" afterPath="$PROJECT_DIR$/target/nwr-triple-api-1.0-jar-with-dependencies.jar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/nwr-triple-api-1.0.jar" afterPath="$PROJECT_DIR$/target/nwr-triple-api-1.0.jar" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nwrtripleapi.iws" afterPath="$PROJECT_DIR$/nwrtripleapi.iws" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/vu/cltl/triple/objects/ResourcesUri.java" afterPath="$PROJECT_DIR$/src/main/java/vu/cltl/triple/objects/ResourcesUri.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/ReducedEventGraph.java" afterPath="$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/ReducedEventGraph.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" afterPath="$PROJECT_DIR$/target/maven-archiver/pom.properties" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -55,18 +58,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CeoEventCentricGraphs.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/CeoEventCentricGraphs.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4165">
-              <caret line="266" column="17" lean-forward="false" selection-start-line="266" selection-start-column="17" selection-end-line="266" selection-end-column="17" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="TrigUtil.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/TrigUtil.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -80,17 +71,18 @@
       <file leaf-file-name="ReducedEventGraph.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/ReducedEventGraph.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="487">
-              <caret line="112" column="65" lean-forward="true" selection-start-line="112" selection-start-column="65" selection-end-line="112" selection-end-column="65" />
+            <state relative-caret-position="351">
+              <caret line="138" column="14" lean-forward="false" selection-start-line="138" selection-start-column="14" selection-end-line="138" selection-end-column="14" />
               <folding>
-                <element signature="e#1408#1435#0" expanded="true" />
-                <element signature="e#3551#3559#0" expanded="true" />
-                <element signature="e#5041#5052#0" expanded="true" />
-                <element signature="e#7184#7195#0" expanded="true" />
-                <element signature="e#8744#8755#0" expanded="true" />
-                <element signature="e#10562#10570#0" expanded="true" />
-                <element signature="e#11588#11596#0" expanded="true" />
-                <element signature="e#14604#14612#0" expanded="true" />
+                <element signature="e#1326#1353#0" expanded="true" />
+                <element signature="e#3409#3417#0" expanded="true" />
+                <element signature="e#3899#3907#0" expanded="true" />
+                <element signature="e#5449#5460#0" expanded="true" />
+                <element signature="e#7829#7840#0" expanded="true" />
+                <element signature="e#10242#10253#0" expanded="true" />
+                <element signature="e#12060#12068#0" expanded="true" />
+                <element signature="e#13086#13094#0" expanded="true" />
+                <element signature="e#16160#16168#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -99,8 +91,8 @@
       <file leaf-file-name="ResourcesUri.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/objects/ResourcesUri.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1258">
-              <caret line="74" column="53" lean-forward="false" selection-start-line="74" selection-start-column="53" selection-end-line="74" selection-end-column="53" />
+            <state relative-caret-position="985">
+              <caret line="94" column="73" lean-forward="true" selection-start-line="94" selection-start-column="73" selection-end-line="94" selection-end-column="73" />
               <folding />
             </state>
           </provider>
@@ -111,16 +103,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="340">
               <caret line="28" column="50" lean-forward="false" selection-start-line="28" selection-start-column="50" selection-end-line="28" selection-end-column="50" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="WriteStatementsKnowledgeStore.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/WriteStatementsKnowledgeStore.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1309">
-              <caret line="91" column="13" lean-forward="false" selection-start-line="91" selection-start-column="13" selection-end-line="91" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -248,11 +230,11 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="73" />
-    <option name="y" value="82" />
-    <option name="width" value="1207" />
-    <option name="height" value="880" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="63" />
+    <option name="y" value="75" />
+    <option name="width" value="1634" />
+    <option name="height" value="956" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -855,7 +837,7 @@
       <workItem from="1543530361948" duration="86000" />
       <workItem from="1543561959457" duration="37000" />
       <workItem from="1544558122058" duration="2541000" />
-      <workItem from="1544566206462" duration="1669000" />
+      <workItem from="1544566206462" duration="8934000" />
     </task>
     <task id="LOCAL-00001" summary="-- first commit: moved the KnowledgeSTore API funcions from the StoryTeller to a new module so that we can share the API">
       <created>1510300363252</created>
@@ -1130,11 +1112,25 @@
       <option name="project" value="LOCAL" />
       <updated>1544566062471</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="-- first commit: moved the KnowledgeSTore API funcions from the StoryTeller to a new module so that we can share the API">
+      <created>1544598153309</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1544598153309</updated>
+    </task>
+    <task id="LOCAL-00041" summary="-- first commit: moved the KnowledgeSTore API funcions from the StoryTeller to a new module so that we can share the API">
+      <created>1544606894363</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1544606894363</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="141898000" />
+    <option name="totallyTimeSpent" value="149163000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1146,7 +1142,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="73" y="82" width="1207" height="880" extended-state="0" />
+    <frame x="0" y="23" width="1280" height="777" extended-state="6" />
     <layout>
       <window_info id="JSON Formatter" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32996973" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1156,13 +1152,13 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16182049" sideWeight="0.5222222" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.060944207" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.09612278" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27789047" sideWeight="0.49785176" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12530713" sideWeight="0.4774875" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2395722" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.29676512" sideWeight="0.4774875" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23909986" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20515022" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16639742" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Maven-2 Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32875606" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28513733" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1207,20 +1203,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/jena/jena-arq/2.11.0/jena-arq-2.11.0-sources.jar!/com/hp/hpl/jena/query/Dataset.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="31" column="17" lean-forward="false" selection-start-line="31" selection-start-column="17" selection-end-line="31" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/read/GetMentionsFromKnowledgeStore.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
@@ -1482,7 +1464,7 @@
         <state relative-caret-position="4165">
           <caret line="266" column="17" lean-forward="false" selection-start-line="266" selection-start-column="17" selection-end-line="266" selection-end-column="17" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1495,27 +1477,44 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/jena/jena-core/2.11.0/jena-core-2.11.0-sources.jar!/com/hp/hpl/jena/rdf/model/ModelFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="211">
+          <caret line="368" column="27" lean-forward="false" selection-start-line="368" selection-start-column="27" selection-end-line="368" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/jena/jena-core/2.11.0/jena-core-2.11.0-sources.jar!/com/hp/hpl/jena/rdf/model/Model.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="399" column="17" lean-forward="false" selection-start-line="399" selection-start-column="17" selection-end-line="399" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/objects/ResourcesUri.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1258">
-          <caret line="74" column="53" lean-forward="false" selection-start-line="74" selection-start-column="53" selection-end-line="74" selection-end-column="53" />
+        <state relative-caret-position="985">
+          <caret line="94" column="73" lean-forward="true" selection-start-line="94" selection-start-column="73" selection-end-line="94" selection-end-column="73" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/ReducedEventGraph.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="487">
-          <caret line="112" column="65" lean-forward="true" selection-start-line="112" selection-start-column="65" selection-end-line="112" selection-end-column="65" />
+        <state relative-caret-position="351">
+          <caret line="138" column="14" lean-forward="false" selection-start-line="138" selection-start-column="14" selection-end-line="138" selection-end-column="14" />
           <folding>
-            <element signature="e#1408#1435#0" expanded="true" />
-            <element signature="e#3551#3559#0" expanded="true" />
-            <element signature="e#5041#5052#0" expanded="true" />
-            <element signature="e#7184#7195#0" expanded="true" />
-            <element signature="e#8744#8755#0" expanded="true" />
-            <element signature="e#10562#10570#0" expanded="true" />
-            <element signature="e#11588#11596#0" expanded="true" />
-            <element signature="e#14604#14612#0" expanded="true" />
+            <element signature="e#1326#1353#0" expanded="true" />
+            <element signature="e#3409#3417#0" expanded="true" />
+            <element signature="e#3899#3907#0" expanded="true" />
+            <element signature="e#5449#5460#0" expanded="true" />
+            <element signature="e#7829#7840#0" expanded="true" />
+            <element signature="e#10242#10253#0" expanded="true" />
+            <element signature="e#12060#12068#0" expanded="true" />
+            <element signature="e#13086#13094#0" expanded="true" />
+            <element signature="e#16160#16168#0" expanded="true" />
           </folding>
         </state>
       </provider>

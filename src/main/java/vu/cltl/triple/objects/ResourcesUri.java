@@ -23,6 +23,7 @@ public class ResourcesUri {
     //final static public String eso = "http://www.newsreader-project.eu/ontologies/eso#";
     //final static public String eso = "http://www.newsreader-project.eu/domain-ontology#";
     final static public String eso = "http://cltl.nl/ontology/eso#";
+    final static public String ceo = "http://cltl.nl/ontology/ceo#";
     final static public String wn = "http://www.newsreader-project.eu/ontologies/pwn3.0/";
     final static public String ili = "http://globalwordnet.org/ili/";
     final static public String cornetto = "http://www.newsreader-project.eu/ontologies/cornetto2.1/";
@@ -80,7 +81,7 @@ public class ResourcesUri {
         model.setNsPrefix("wn", ResourcesUri.wn);
         model.setNsPrefix("ili", ResourcesUri.ili);
         model.setNsPrefix("fn", ResourcesUri.fn);
-        model.setNsPrefix("eso", ResourcesUri.eso);
+        model.setNsPrefix("ceo", ResourcesUri.ceo);
         model.setNsPrefix("pb", ResourcesUri.pb);
         model.setNsPrefix("dbp", ResourcesUri.dbp);
         model.setNsPrefix("sem", ResourcesUri.sem);

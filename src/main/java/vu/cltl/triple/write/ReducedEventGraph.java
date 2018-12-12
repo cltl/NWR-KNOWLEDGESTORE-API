@@ -26,20 +26,18 @@ import java.util.Map;
 public class ReducedEventGraph {
     static String testparameter = "--ont-file /Users/piek/Desktop/Deloitte/vu-naf-to-rdf/vua-resources/CLTL_CEO_version_1_sameas.owl" +
             " --trig /Users/piek/Desktop/Deloitte/wikinews-rdf/" +
-            " --event-graph /Users/piek/Desktop/Deloitte/reduced-eso-event.trig" +
-            " --ontology eso";
+            " --ontology ceo";
     final static String owl= "http://www.w3.org/2002/07/owl#";
-    final static String cltl= "http://cltl.nl/ontology#";
+    final static String cltl= "http://cltl.nl/ontology/";
     final static String predicateName = "sameAs";
 
     static OntModel ontologyModel;
     static HashMap<String, ArrayList<String>> mappingsToClass = new HashMap<String, ArrayList<String>>();
+    static String ontology = "";
 
     static public void main (String[] args) {
         String pathToTrigFiles = "";
-        String pathToReducedEventGraph = "";
         String pathToOwlOntology = "";
-        String ontology = "";
         if (args.length==0) {
                     args = testparameter.split(" ");
         }
@@ -51,19 +49,12 @@ public class ReducedEventGraph {
             else if (arg.equals("--trig") && args.length>(i+1)) {
                 pathToTrigFiles = args[i+1];
             }
-            else if (arg.equals("--event-graph") && args.length>(i+1)) {
-                pathToReducedEventGraph = args[i+1];
-            }
             else if (arg.equals("--ontology") && args.length>(i+1)) {
                 ontology = args[i+1];
             }
         }
         File trigFolder = new File (pathToTrigFiles);
-
-        if (pathToReducedEventGraph.isEmpty()) {
-            String name = trigFolder.getName();
-            pathToReducedEventGraph = trigFolder.getParentFile().getAbsolutePath()+"/"+name+".entity.eventgit .trig";
-        }
+        String pathToReducedEventGraph =  trigFolder.getParentFile().getAbsolutePath()+"/"+"reduced-"+ontology+"-event.trig";
         /// Read the CEO OWL ontology to find mappings of FrameNet and SUMO to CEO to get the latest coverage
         if (!new File(pathToOwlOntology).exists()) {
             System.out.println("cannot find pathToOwlOntology = " + pathToOwlOntology);
@@ -71,8 +62,13 @@ public class ReducedEventGraph {
         }
         ontologyModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, null);
         readOwlFile(pathToOwlOntology);
-        OntClass myClass = ontologyModel.getOntClass(cltl+"Physical");
-        descendHierarchyForValues(myClass, predicateName);
+        OntClass myClass = ontologyModel.getOntClass(cltl+ontology+"#Physical");
+        if (myClass!=null) descendHierarchyForValues(myClass, predicateName);
+        else {
+            System.out.println("Error loading ontology");
+            System.out.println("ontologyModel = " + ontologyModel.getSubGraphs().size());
+            return;
+        }
         /////////
 
         Dataset reducedEventDataSet =  TDBFactory.createDataset();
@@ -94,6 +90,7 @@ public class ReducedEventGraph {
                     else if (ontology.equalsIgnoreCase("eso") ||
                              ontology.equalsIgnoreCase("ceo")) {
                         typeURIs = getEsoTpes(statements);
+                        //System.out.println("typeURIs.toString() = " + typeURIs.toString());
                         if (typeURIs.isEmpty() && !ontology.equalsIgnoreCase("framenet")) {
                            //// If there are no ESO/CEO types in the RDF, we try to obtain a mappings from FrameNet frames to ESO/CEO
                            ArrayList<String> frames = getFrameNetTypes(statements);
@@ -113,16 +110,17 @@ public class ReducedEventGraph {
                     if (!typeURIs.isEmpty()) {
                         ArrayList<Statement> reducedstatements = new ArrayList<Statement>();
                         if (ontology.equalsIgnoreCase("framenet")) {
-                            reduceToFrameNetStatements(
+                            reducedstatements = reduceToFrameNetStatements(
                                     statements);
                         }
                         else if (ontology.equalsIgnoreCase("eso")) {
-                            reduceToEsoStatements(
-                                    statements);
+                            reducedstatements = reduceToEsoStatements(
+                                    statements, reducedEventDataSet.getDefaultModel());
                         }
                         else if (ontology.equalsIgnoreCase("ceo")) {
-                            reduceToEsoStatements(
-                                    statements);
+                          //  System.out.println("typeURIs = " + typeURIs.toString());
+                            reducedstatements= reduceToEsoStatements(
+                                    statements, reducedEventDataSet.getDefaultModel());
                         }
                         reducedEventDataSet.getDefaultModel().add(reducedstatements);
                         for (int i = 0; i < statements.size(); i++) {
@@ -155,7 +153,7 @@ public class ReducedEventGraph {
 
     }
 
-    static ArrayList<Statement> reduceToEsoStatements (ArrayList<Statement> statements) {
+    static ArrayList<Statement> reduceToEsoStatements (ArrayList<Statement> statements, Model model) {
         ArrayList<Statement> reduced  = new ArrayList<Statement>();
         for (int i = 0; i < statements.size(); i++) {
             Statement statement = statements.get(i);
@@ -164,10 +162,24 @@ public class ReducedEventGraph {
                     reduced.add(statement);
                 }
                 else if (statement.getObject().asResource().getNameSpace().equals("http://cltl.nl/ontology/eso#")) {
-                    reduced.add(statement);
+                    if (ontology.equalsIgnoreCase("ceo")) {
+                        Resource ceoObject = model.createResource("http://cltl.nl/ontology/ceo#" + statement.getObject().asResource().getLocalName());
+                        Statement ceoStatement = model.createStatement(statement.getSubject(), statement.getPredicate(), ceoObject);
+                        reduced.add(ceoStatement);
+                    }
+                    else {
+                        reduced.add(statement);
+                    }
                 }
                 else if (statement.getObject().asResource().getLocalName().equals("EVENT")) {
                     reduced.add(statement);
+                }
+                else if (statement.getObject().asResource().getNameSpace().equals("http://www.newsreader-project.eu/ontologies/framenet/")) {
+                    reduced.add(statement);
+                }
+                else {
+                   // reduced.add(statement);
+                   // System.out.println("statement.toString() = " + statement.toString());
                 }
             }
             else if (statement.getPredicate().getNameSpace().equals("http://cltl.nl/ontology/ceo#")) {
@@ -252,8 +264,8 @@ public class ReducedEventGraph {
             if (statement.getPredicate().getLocalName().equals("type")) {
                 if (statement.getObject().asResource().getNameSpace().indexOf("framenet")>-1) {
                    // System.out.println("statement.getObject().asResource().getNameSpace() = " + statement.getObject().asResource().getNameSpace());
-                    String esoUri = statement.getObject().asResource().getURI();
-                    types.add(esoUri);
+                    String frame = statement.getObject().asResource().getLocalName();
+                    types.add(frame);
                 }
             }
         }
@@ -308,6 +320,7 @@ public class ReducedEventGraph {
         while (pI.hasNext()) {
             Statement statement = pI.next();
             String value = getPredicateValue(statement, predicateName);
+            //System.out.println("value = " + value);
             if (mappingsToClass.containsKey(value)) {
                 ArrayList<String> classes = mappingsToClass.get(value);
                 classes.add(ontClass.getLocalName());
