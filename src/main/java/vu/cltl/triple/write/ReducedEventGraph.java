@@ -26,8 +26,8 @@ import java.util.Map;
 public class ReducedEventGraph {
     static String testparameter = "--ont-file /Users/piek/Desktop/Deloitte/vu-naf-to-rdf/vua-resources/CLTL_CEO_version_1_sameas.owl" +
             " --trig /Users/piek/Desktop/Deloitte/wikinews-rdf/" +
-            " --event-graph /Users/piek/Desktop/Deloitte/reduced-event.trig" +
-            "--ontology framnet";
+            " --event-graph /Users/piek/Desktop/Deloitte/reduced-eso-event.trig" +
+            " --ontology eso";
     final static String owl= "http://www.w3.org/2002/07/owl#";
     final static String cltl= "http://cltl.nl/ontology#";
     final static String predicateName = "sameAs";
@@ -87,22 +87,30 @@ public class ReducedEventGraph {
                 ArrayList<Statement> statements = entry.getValue();
 
                 if (isEvent(statements)) {
-                    ArrayList<String> esoURIs = getEsoTpes(statements);
-                    if (esoURIs.isEmpty()) {
-                        //// If there are no ESO/CEO types in the RDF, we try to obtain a mappings from FrameNet frames to ESO/CEO
-                        ArrayList<String> frames = getFrameNetTypes(statements);
-                        for (int i = 0; i < frames.size(); i++) {
-                            String frame = frames.get(i);
-                            if (mappingsToClass.containsKey(frame)) {
-                                ArrayList<String> classes = mappingsToClass.get(frame);
-                                for (int j = 0; j < classes.size(); j++) {
-                                    String c = classes.get(j);
-                                    if (!esoURIs.contains(c)) esoURIs.add(c);
-                                }
-                            }
-                        }
+                    ArrayList<String> typeURIs =  new ArrayList<String>();
+                    if (ontology.equalsIgnoreCase("framenet")) {
+                        typeURIs = getFrameNetTypes(statements);
                     }
-                    if (!esoURIs.isEmpty()) {
+                    else if (ontology.equalsIgnoreCase("eso") ||
+                             ontology.equalsIgnoreCase("ceo")) {
+                        typeURIs = getEsoTpes(statements);
+                        if (typeURIs.isEmpty() && !ontology.equalsIgnoreCase("framenet")) {
+                           //// If there are no ESO/CEO types in the RDF, we try to obtain a mappings from FrameNet frames to ESO/CEO
+                           ArrayList<String> frames = getFrameNetTypes(statements);
+                           for (int i = 0; i < frames.size(); i++) {
+                               String frame = frames.get(i);
+                               if (mappingsToClass.containsKey(frame)) {
+                                   ArrayList<String> classes = mappingsToClass.get(frame);
+                                   for (int j = 0; j < classes.size(); j++) {
+                                       String c = classes.get(j);
+                                       if (!typeURIs.contains(c)) typeURIs.add(c);
+                                   }
+                               }
+                           }
+                       }
+                    }
+
+                    if (!typeURIs.isEmpty()) {
                         ArrayList<Statement> reducedstatements = new ArrayList<Statement>();
                         if (ontology.equalsIgnoreCase("framenet")) {
                             reduceToFrameNetStatements(
