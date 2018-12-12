@@ -26,7 +26,8 @@ import java.util.Map;
 public class ReducedEventGraph {
     static String testparameter = "--ont-file /Users/piek/Desktop/Deloitte/vu-naf-to-rdf/vua-resources/CLTL_CEO_version_1_sameas.owl" +
             " --trig /Users/piek/Desktop/Deloitte/wikinews-rdf/" +
-            " --event-graph /Users/piek/Desktop/Deloitte/reduced-event.trig";
+            " --event-graph /Users/piek/Desktop/Deloitte/reduced-event.trig" +
+            "--ontology framnet";
     final static String owl= "http://www.w3.org/2002/07/owl#";
     final static String cltl= "http://cltl.nl/ontology#";
     final static String predicateName = "sameAs";
@@ -38,6 +39,7 @@ public class ReducedEventGraph {
         String pathToTrigFiles = "";
         String pathToReducedEventGraph = "";
         String pathToOwlOntology = "";
+        String ontology = "";
         if (args.length==0) {
                     args = testparameter.split(" ");
         }
@@ -51,6 +53,9 @@ public class ReducedEventGraph {
             }
             else if (arg.equals("--event-graph") && args.length>(i+1)) {
                 pathToReducedEventGraph = args[i+1];
+            }
+            else if (arg.equals("--ontology") && args.length>(i+1)) {
+                ontology = args[i+1];
             }
         }
         File trigFolder = new File (pathToTrigFiles);
@@ -98,7 +103,19 @@ public class ReducedEventGraph {
                         }
                     }
                     if (!esoURIs.isEmpty()) {
-                        ArrayList<Statement> reducedstatements = reduceStatements(statements);
+                        ArrayList<Statement> reducedstatements = new ArrayList<Statement>();
+                        if (ontology.equalsIgnoreCase("framenet")) {
+                            reduceToFrameNetStatements(
+                                    statements);
+                        }
+                        else if (ontology.equalsIgnoreCase("eso")) {
+                            reduceToEsoStatements(
+                                    statements);
+                        }
+                        else if (ontology.equalsIgnoreCase("ceo")) {
+                            reduceToEsoStatements(
+                                    statements);
+                        }
                         reducedEventDataSet.getDefaultModel().add(reducedstatements);
                         for (int i = 0; i < statements.size(); i++) {
                             Statement statement = statements.get(i);
@@ -130,12 +147,43 @@ public class ReducedEventGraph {
 
     }
 
-    static ArrayList<Statement> reduceStatements (ArrayList<Statement> statements) {
+    static ArrayList<Statement> reduceToEsoStatements (ArrayList<Statement> statements) {
         ArrayList<Statement> reduced  = new ArrayList<Statement>();
         for (int i = 0; i < statements.size(); i++) {
             Statement statement = statements.get(i);
             if (statement.getPredicate().getLocalName().equals("type")) {
                 if (statement.getObject().asResource().getNameSpace().equals("http://cltl.nl/ontology/ceo#")) {
+                    reduced.add(statement);
+                }
+                else if (statement.getObject().asResource().getNameSpace().equals("http://cltl.nl/ontology/eso#")) {
+                    reduced.add(statement);
+                }
+                else if (statement.getObject().asResource().getLocalName().equals("EVENT")) {
+                    reduced.add(statement);
+                }
+            }
+            else if (statement.getPredicate().getNameSpace().equals("http://cltl.nl/ontology/ceo#")) {
+                 /// skip
+            }
+            else if (statement.getPredicate().getNameSpace().equals("http://cltl.nl/ontology/eso#")) {
+                 /// skip
+            }
+            else if (statement.getPredicate().getNameSpace().equals("http://www.newsreader-project.eu/ontologies/framenet/")) {
+                //// skip
+            }
+            else {
+               // System.out.println("statement.getPredicate().getNameSpace() = " + statement.getPredicate().getNameSpace());
+                reduced.add(statement);
+            }
+        }
+        return reduced;
+    }
+    static ArrayList<Statement> reduceToFrameNetStatements (ArrayList<Statement> statements) {
+        ArrayList<Statement> reduced  = new ArrayList<Statement>();
+        for (int i = 0; i < statements.size(); i++) {
+            Statement statement = statements.get(i);
+            if (statement.getPredicate().getLocalName().equals("type")) {
+                if (statement.getObject().asResource().getNameSpace().equals("http://www.newsreader-project.eu/ontologies/framenet/")) {
                     reduced.add(statement);
                 }
                 else if (statement.getObject().asResource().getLocalName().equals("EVENT")) {
