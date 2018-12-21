@@ -31,6 +31,7 @@ public class EntityGraph {
     final static String owl= "http://www.w3.org/2002/07/owl#";
     final static String cltl= "http://cltl.nl/ontology#";
     final static String predicateName = "sameAs";
+    static boolean LOCATIONS = false;
 
     static OntModel ontologyModel;
     static HashMap<String, ArrayList<String>> mappingsToClass = new HashMap<String, ArrayList<String>>();
@@ -53,6 +54,9 @@ public class EntityGraph {
             }
             else if (arg.equals("--event-graph") && args.length>(i+1)) {
                 pathToEntityEventGraph = args[i+1];
+            }
+            else if (arg.equals("--locations") && args.length>(i+1)) {
+                LOCATIONS = true;
             }
             else if (arg.equals("--document-graph") && args.length>(i+1)) {
                 pathToEntityDocumentGraph = args[i+1];
@@ -114,11 +118,13 @@ public class EntityGraph {
                                 if (trigTripleData.tripleMapInstances.containsKey(objectUri)) {
                                     ArrayList<Statement> objectStatements = trigTripleData.tripleMapInstances.get(objectUri);
                                     if (isEntity(objectStatements)) {
-                                        if (!eventEntities.contains(objectUri)) {
-                                            eventEntities.add(objectUri);
-                                        }
-                                        if (!documentEntities.contains(objectUri)) {
-                                            documentEntities.add(objectUri);
+                                        if (!LOCATIONS && !isLocation(objectStatements)) {
+                                            if (!eventEntities.contains(objectUri)) {
+                                                eventEntities.add(objectUri);
+                                            }
+                                            if (!documentEntities.contains(objectUri)) {
+                                                documentEntities.add(objectUri);
+                                            }
                                         }
                                     }
                                 }
@@ -243,6 +249,56 @@ public class EntityGraph {
             }
             return false;
     }
+
+    static boolean isPerson (ArrayList<Statement> statements) {
+            for (int i = 0; i < statements.size(); i++) {
+                Statement statement = statements.get(i);
+                if (statement.getPredicate().getLocalName().equals("type")) {
+                    if (statement.getObject().asResource().getLocalName().equalsIgnoreCase("PERS")) {
+                        return true;
+                    }
+                    else if (statement.getObject().asResource().getLocalName().equalsIgnoreCase("PERSON")) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+    }
+
+    static boolean isOrganisation (ArrayList<Statement> statements) {
+            for (int i = 0; i < statements.size(); i++) {
+                Statement statement = statements.get(i);
+                if (statement.getPredicate().getLocalName().equals("type")) {
+                    if (statement.getObject().asResource().getLocalName().equalsIgnoreCase("ORG")) {
+                        return true;
+                    }
+                    else if (statement.getObject().asResource().getLocalName().equalsIgnoreCase("ORGANISATION")) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+    }
+
+    static boolean isLocation (ArrayList<Statement> statements) {
+            for (int i = 0; i < statements.size(); i++) {
+                Statement statement = statements.get(i);
+                if (statement.getPredicate().getLocalName().equals("type")) {
+                    if (statement.getObject().asResource().getLocalName().equalsIgnoreCase("LOC")) {
+                        return true;
+                    }
+                    else if (statement.getObject().asResource().getLocalName().equalsIgnoreCase("LOCATION")) {
+                        return true;
+                    }
+                    else if (statement.getObject().asResource().getLocalName().equalsIgnoreCase("PLACE")) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+    }
+
+
 
     static void addStatement (Model model, String subj, String predicate, String obj) {
         Resource subjectResource = model.createResource(subj);

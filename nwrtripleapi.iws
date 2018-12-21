@@ -5,8 +5,7 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/nwr-triple-api-1.0-jar-with-dependencies.jar" afterPath="$PROJECT_DIR$/target/nwr-triple-api-1.0-jar-with-dependencies.jar" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/nwr-triple-api-1.0.jar" afterPath="$PROJECT_DIR$/target/nwr-triple-api-1.0.jar" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nwrtripleapi.iws" afterPath="$PROJECT_DIR$/nwrtripleapi.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/vu/cltl/triple/objects/ResourcesUri.java" afterPath="$PROJECT_DIR$/src/main/java/vu/cltl/triple/objects/ResourcesUri.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/ReducedEventGraph.java" afterPath="$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/ReducedEventGraph.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/EntityGraph.java" afterPath="$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/EntityGraph.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" afterPath="$PROJECT_DIR$/target/maven-archiver/pom.properties" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -23,67 +22,22 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="TrigTripleReader.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/read/TrigTripleReader.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="663">
-              <caret line="145" column="75" lean-forward="false" selection-start-line="145" selection-start-column="75" selection-end-line="145" selection-end-column="75" />
-              <folding>
-                <element signature="method#addTriplesFromFile#0;class#TrigTripleReader#0" expanded="false" />
-                <element signature="method#readGraspTripleFromTrigFiles#0;class#TrigTripleReader#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TrigTripleData.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/objects/TrigTripleData.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="16" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="EntityGraph.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/EntityGraph.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1037">
-              <caret line="82" column="52" lean-forward="false" selection-start-line="82" selection-start-column="52" selection-end-line="82" selection-end-column="52" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TrigUtil.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/TrigUtil.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="16728">
-              <caret line="997" column="9" lean-forward="false" selection-start-line="997" selection-start-column="9" selection-end-line="997" selection-end-column="9" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ReducedEventGraph.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ReducedEventGraph.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/ReducedEventGraph.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="351">
-              <caret line="138" column="14" lean-forward="false" selection-start-line="138" selection-start-column="14" selection-end-line="138" selection-end-column="14" />
-              <folding>
-                <element signature="e#1326#1353#0" expanded="true" />
-                <element signature="e#3409#3417#0" expanded="true" />
-                <element signature="e#3899#3907#0" expanded="true" />
-                <element signature="e#5449#5460#0" expanded="true" />
-                <element signature="e#7829#7840#0" expanded="true" />
-                <element signature="e#10242#10253#0" expanded="true" />
-                <element signature="e#12060#12068#0" expanded="true" />
-                <element signature="e#13086#13094#0" expanded="true" />
-                <element signature="e#16160#16168#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="1666">
+              <caret line="119" column="68" lean-forward="false" selection-start-line="119" selection-start-column="68" selection-end-line="119" selection-end-column="68" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EntityGraph.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/EntityGraph.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="112">
+              <caret line="127" column="45" lean-forward="true" selection-start-line="120" selection-start-column="40" selection-end-line="127" selection-end-column="41" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -91,8 +45,8 @@
       <file leaf-file-name="ResourcesUri.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/objects/ResourcesUri.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="985">
-              <caret line="94" column="73" lean-forward="true" selection-start-line="94" selection-start-column="73" selection-end-line="94" selection-end-column="73" />
+            <state relative-caret-position="1598">
+              <caret line="94" column="59" lean-forward="false" selection-start-line="94" selection-start-column="59" selection-end-line="94" selection-end-column="59" />
               <folding />
             </state>
           </provider>
@@ -101,8 +55,18 @@
       <file leaf-file-name="JenaSerialization.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/JenaSerialization.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="28" column="50" lean-forward="false" selection-start-line="28" selection-start-column="50" selection-end-line="28" selection-end-column="50" />
+            <state relative-caret-position="1445">
+              <caret line="93" column="34" lean-forward="false" selection-start-line="93" selection-start-column="34" selection-end-line="93" selection-end-column="34" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SemObject.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/objects/SemObject.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="9316">
+              <caret line="614" column="49" lean-forward="false" selection-start-line="614" selection-start-column="49" selection-end-line="614" selection-end-column="49" />
               <folding />
             </state>
           </provider>
@@ -194,10 +158,10 @@
         <option value="$PROJECT_DIR$/src/main/java/vu/cltl/triple/naf/RewriteNafWithDomainKnowledge.java" />
         <option value="$PROJECT_DIR$/src/main/java/vu/cltl/triple/read/FilterStatements.java" />
         <option value="$PROJECT_DIR$/src/main/java/vu/cltl/triple/read/TrigTripleReader.java" />
-        <option value="$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/EntityGraph.java" />
         <option value="$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/CeoEventCentricGraphs.java" />
         <option value="$PROJECT_DIR$/src/main/java/vu/cltl/triple/objects/ResourcesUri.java" />
         <option value="$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/ReducedEventGraph.java" />
+        <option value="$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/EntityGraph.java" />
       </list>
     </option>
   </component>
@@ -230,11 +194,10 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="63" />
-    <option name="y" value="75" />
-    <option name="width" value="1634" />
-    <option name="height" value="956" />
+  <component name="ProjectFrameBounds">
+    <option name="y" value="23" />
+    <option name="width" value="1920" />
+    <option name="height" value="1057" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -253,7 +216,6 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -337,8 +299,9 @@
           <select />
         </subPane>
       </pane>
-      <pane id="AndroidView" />
+      <pane id="PackagesPane" />
       <pane id="Scratches" />
+      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -837,7 +800,11 @@
       <workItem from="1543530361948" duration="86000" />
       <workItem from="1543561959457" duration="37000" />
       <workItem from="1544558122058" duration="2541000" />
-      <workItem from="1544566206462" duration="8934000" />
+      <workItem from="1544566206462" duration="9869000" />
+      <workItem from="1544651326650" duration="14000" />
+      <workItem from="1545220406613" duration="56000" />
+      <workItem from="1545250657031" duration="16000" />
+      <workItem from="1545382487759" duration="269000" />
     </task>
     <task id="LOCAL-00001" summary="-- first commit: moved the KnowledgeSTore API funcions from the StoryTeller to a new module so that we can share the API">
       <created>1510300363252</created>
@@ -1126,11 +1093,18 @@
       <option name="project" value="LOCAL" />
       <updated>1544606894363</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="-- first commit: moved the KnowledgeSTore API funcions from the StoryTeller to a new module so that we can share the API">
+      <created>1544627801236</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1544627801236</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="149163000" />
+    <option name="totallyTimeSpent" value="150453000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1142,23 +1116,22 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1280" height="777" extended-state="6" />
+    <frame x="0" y="23" width="1920" height="1057" extended-state="6" />
     <layout>
       <window_info id="JSON Formatter" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32996973" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32896066" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32303372" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16182049" sideWeight="0.5222222" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.09612278" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13045794" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27789047" sideWeight="0.49785176" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.29676512" sideWeight="0.4774875" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22401614" sideWeight="0.4774875" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23909986" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16639742" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23642172" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Maven-2 Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32875606" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28513733" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1176,6 +1149,7 @@
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32303372" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4522472" sideWeight="0.4935553" order="1" side_tool="false" content_ui="tabs" />
@@ -1393,13 +1367,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/read/FilterStatements.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/objects/SemObject.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="574">
-          <caret line="616" column="13" lean-forward="true" selection-start-line="601" selection-start-column="8" selection-end-line="616" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/storeGraspStatementInKnowledgeStore.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1569">
@@ -1422,22 +1389,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/JenaSerialization.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="28" column="50" lean-forward="false" selection-start-line="28" selection-start-column="50" selection-end-line="28" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/read/TrigTripleReader.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="663">
           <caret line="145" column="75" lean-forward="false" selection-start-line="145" selection-start-column="75" selection-end-line="145" selection-end-column="75" />
-          <folding>
-            <element signature="method#addTriplesFromFile#0;class#TrigTripleReader#0" expanded="false" />
-            <element signature="method#readGraspTripleFromTrigFiles#0;class#TrigTripleReader#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1445,17 +1400,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="16" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/EntityGraph.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1037">
-          <caret line="82" column="52" lean-forward="false" selection-start-line="82" selection-start-column="52" selection-end-line="82" selection-end-column="52" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1473,7 +1417,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="16728">
           <caret line="997" column="9" lean-forward="false" selection-start-line="997" selection-start-column="9" selection-end-line="997" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1481,7 +1424,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="211">
           <caret line="368" column="27" lean-forward="false" selection-start-line="368" selection-start-column="27" selection-end-line="368" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1489,33 +1431,46 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
           <caret line="399" column="17" lean-forward="false" selection-start-line="399" selection-start-column="17" selection-end-line="399" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/objects/ResourcesUri.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="985">
-          <caret line="94" column="73" lean-forward="true" selection-start-line="94" selection-start-column="73" selection-end-line="94" selection-end-column="73" />
+        <state relative-caret-position="1598">
+          <caret line="94" column="59" lean-forward="false" selection-start-line="94" selection-start-column="59" selection-end-line="94" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/JenaSerialization.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1445">
+          <caret line="93" column="34" lean-forward="false" selection-start-line="93" selection-start-column="34" selection-end-line="93" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/objects/SemObject.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="9316">
+          <caret line="614" column="49" lean-forward="false" selection-start-line="614" selection-start-column="49" selection-end-line="614" selection-end-column="49" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/ReducedEventGraph.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="351">
-          <caret line="138" column="14" lean-forward="false" selection-start-line="138" selection-start-column="14" selection-end-line="138" selection-end-column="14" />
-          <folding>
-            <element signature="e#1326#1353#0" expanded="true" />
-            <element signature="e#3409#3417#0" expanded="true" />
-            <element signature="e#3899#3907#0" expanded="true" />
-            <element signature="e#5449#5460#0" expanded="true" />
-            <element signature="e#7829#7840#0" expanded="true" />
-            <element signature="e#10242#10253#0" expanded="true" />
-            <element signature="e#12060#12068#0" expanded="true" />
-            <element signature="e#13086#13094#0" expanded="true" />
-            <element signature="e#16160#16168#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="1666">
+          <caret line="119" column="68" lean-forward="false" selection-start-line="119" selection-start-column="68" selection-end-line="119" selection-end-column="68" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/vu/cltl/triple/write/EntityGraph.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="112">
+          <caret line="127" column="45" lean-forward="true" selection-start-line="120" selection-start-column="40" selection-end-line="127" selection-end-column="41" />
+          <folding />
         </state>
       </provider>
     </entry>
